@@ -1,0 +1,13 @@
+//Task 实现
+
+//         1、获取元素。
+//
+// 2、当鼠标指向Div1时，Div2显示。
+//
+// 3、当鼠标离开Div1时，使Div2延迟0.5秒消失，这样以便有时间把鼠标移到Div2。
+//
+// 4、当鼠标指向Div2时，Div2显示。因为第3步设置setTimeout使Div2消失，所以把用clearTimeout()把setTimeout清除了就可以实现Div2显示了。
+//
+// 5、当鼠标离开Div2时，使Div2延迟0.5秒消失，这样以便有时间把鼠标指向Div1。1
+//
+// 6、第2步已经设置了鼠标指向Div1，Div2就显示，但由于第5步设置setTimeout使Div2消失，所以在第2步加上clearTimeout()把setTimeout清除了就可以实现Div2显示了。
