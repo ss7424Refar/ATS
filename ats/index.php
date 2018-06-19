@@ -68,7 +68,6 @@
         });
 
         // Task
-
         $(function () {
             var buttonGroup=$('.btn-group:eq(2)');
             var time=null;
@@ -166,15 +165,49 @@
                     <i class="fas fa-chevron-circle-down fa-fw pull-right"></i>
                 </div>
                 <div class="panel-body">
-                    <form class="form-inline" action="">
+                    <form class="form-horizontal form-group-sm">
                         <div class="form-group">
-
+                            <label for="inputEmail3" class="col-sm-1 control-label">TaskID</label>
+                            <div class="col-sm-2">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                            <label for="inputEmail3" class="col-sm-1 control-label">TestPC</label>
+                            <div class="col-sm-2">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                            <label for="inputEmail3" class="col-sm-1 control-label">TestImage</label>
+                            <div class="col-sm-2">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                            <label for="inputEmail3" class="col-sm-1 control-label">SerialNo</label>
+                            <div class="col-sm-2">
+                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword3" class="col-sm-1 control-label">StartDate</label>
+                            <div class="col-sm-2">
+                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            </div>
+                            <label for="inputPassword3" class="col-sm-1 control-label">FinishDate</label>
+                            <div class="col-sm-2">
+                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            </div>
+                            <label for="inputPassword3" class="col-sm-1 control-label">AssignTask</label>
+                            <div class="col-sm-2">
+                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            </div>
+                            <label for="inputPassword3" class="col-sm-1 control-label">TestStatus</label>
+                            <div class="col-sm-2">
+                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            </div>
                         </div>
 
                         <hr>
-                        <button type="submit" class="btn btn-info btn-sm col-md-offset-4" id="returnSearch">Return</button>
-                        <button type="submit" class="btn btn-success btn-sm col-md-offset-1">Send</button>
-                        <button type="reset" class="btn btn-primary btn-sm col-md-offset-1">Reset</button>
+
+                        <button type="submit" class="btn btn-info btn-sm col-md-offset-4" ><i class="fas fa-check-circle fa-fw"></i>&nbsp;Submit</button>
+                        <button type="submit" class="btn btn-success btn-sm col-md-offset-1"><i class="fa fa-undo fa-fw"></i>&nbsp;Reset</button>
+                        <button type="reset" class="btn btn-primary btn-sm col-md-offset-1" id="returnSearch"><i class="fas fa-long-arrow-alt-left fa-fw"></i>&nbsp;Back</button>
                     </form>
 
                 </div>
@@ -186,10 +219,10 @@
             </div>
 
             <div class="btn-group" role="group" style="display: none">
-                <button type="button" class="btn btn-success btn-sm"><i class="fa fa-plus fa-fw"></i> 添加</button>
-                <button type="button" class="btn btn-info btn-sm"><i class="fa fa-pencil-alt fa-fw"></i> 编辑</button>
-                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt  fa-fw"></i> 删除</button>
-                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-copy  fa-fw"></i> 拷贝</button>
+                <button type="button" class="btn btn-success btn-sm"><i class="fa fa-plus fa-fw"></i>&nbsp;Add</button>
+                <button type="button" class="btn btn-info btn-sm"><i class="fa fa-pencil-alt fa-fw"></i>&nbsp;Edit</button>
+                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt  fa-fw"></i>&nbsp;Delete</button>
+                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-copy  fa-fw"></i>&nbsp;Copy</button>
             </div>
                 <button class="btn btn-warning pull-right btn-sm" href="#"><i class="fa fa-sync fa-spin fa-fw" aria-hidden="true"></i></button>
         </div>
@@ -198,93 +231,29 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
-                    <th>Table heading</th>
+                    <th>TaskID</th>
+                    <th>Test Machine</th>
+                    <th>Test Image</th>
+                    <th>Serial Number</th>
+                    <th>Assigned Task</th>
+                    <th>Test Status</th>
+                    <th>Start Date</th>
+                    <th>Finish Date</th>
+                    <th>Test Result</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                </tr>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
-                    <td>Table cell</td>
+                    <td>ats10000</td>
+                    <td>Altari-LE50-CS1-SKU1</td>
+                    <td>TDH0042800B</td>
+                    <td>Zd102073H</td>
+                    <td>Jumpstart Test</td>
+                    <td>ongoing</td>
+                    <td>2018/06/28 9:30:30</td>
+                    <td>2018/06/28 9:30:30</td>
+                    <td>Pass(view)</td>
                 </tr>
 
             </tbody>
