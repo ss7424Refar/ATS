@@ -13,7 +13,15 @@
     <script src="third_party/pace/pace.js"></script>
     <link href="third_party/pace/themes/blue/pace-theme-flash.css" rel="stylesheet"/>
 
+    <!--fa-->
     <link rel="stylesheet" href="third_party/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.css">
+
+    <!--    datetimepicker-->
+    <link rel="stylesheet" href="third_party/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css">
+    <script src="third_party/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+
+    <script type="text/javascript" src="third_party/select2-develop/dist/js/select2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="third_party/select2-develop/dist/css/select2.min.css">
 
     <style type="text/css">
         body { padding-top: 70px; }
@@ -91,7 +99,25 @@
             });
 
         });
+        // datetimepicker
+        $(function () {
+            $(".form_datetime").datetimepicker({
+                initialDate: new Date(),
+                bootcssVer:3,
+                format: "yyyy-mm-dd",
+                autoclose: true,
+                todayBtn: true,
+                minView: 2,
+                pickerPosition: "bottom-right"
+            });
+        });
 
+        // select2
+        $(function () {
+            $('.js-example-basic-single').select2(
+                {width: "100%"}
+            );
+        });
     </script>
 
 </head>
@@ -146,7 +172,7 @@
                         <label class="sr-only" for="exampleInputAmount">TaskNo</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fas fa-sort-numeric-up fa-fw"></i><small>&nbsp;TaskNo</small></div>
-                            <input type="text" class="form-control input-sm" id="exampleInputAmount" placeholder="Please input your TaskNo">
+                            <input type="text" class="form-control input-sm" id="exampleInputAmount" placeholder="Please input TaskNo">
                         </div>
                     </div>
                     <div class="btn-group">
@@ -166,48 +192,59 @@
                 </div>
                 <div class="panel-body">
                     <form class="form-horizontal form-group-sm">
+<!--                        first line form-->
                         <div class="form-group">
-                            <label for="inputEmail3" class="col-sm-1 control-label">TaskID</label>
+                            <label for="TaskID" class="col-sm-1 control-label">TaskID</label>
                             <div class="col-sm-2">
-                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                                <input type="text" class="form-control" id="TaskID" placeholder="TaskID">
                             </div>
-                            <label for="inputEmail3" class="col-sm-1 control-label">TestPC</label>
+                            <label for="TestPC" class="col-sm-1 control-label">TestPC</label>
                             <div class="col-sm-2">
-                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                                <input type="text" class="form-control" id="TestPC" placeholder="TestPC">
                             </div>
-                            <label for="inputEmail3" class="col-sm-1 control-label">TestImage</label>
+                            <label for="TestImage" class="col-sm-1 control-label">TestImage</label>
                             <div class="col-sm-2">
-                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+<!--                                <input type="text" class="form-control" id="TestImage" placeholder="TestImage">-->
+                                <select class="js-example-basic-single form-control" name="state">
+                                    <option value="AL">Alabama</option>
+                                    <option value="WY">Wyoming</option>
+                                </select>
                             </div>
-                            <label for="inputEmail3" class="col-sm-1 control-label">SerialNo</label>
+                            <label for="SerialNo" class="col-sm-1 control-label">SerialNo</label>
                             <div class="col-sm-2">
-                                <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+                                <input type="text" class="form-control" id="SerialNo" placeholder="SerialNo">
                             </div>
                         </div>
+<!--                        second line form-->
                         <div class="form-group">
-                            <label for="inputPassword3" class="col-sm-1 control-label">StartDate</label>
+                            <label for="StartDate" class="col-sm-1 control-label">StartDate</label>
                             <div class="col-sm-2">
-                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                                <input type="text"  class="form_datetime form-control" id="StartDate" placeholder="StartDate">
                             </div>
-                            <label for="inputPassword3" class="col-sm-1 control-label">FinishDate</label>
+                            <label for="FinishDate" class="col-sm-1 control-label">FinishDate</label>
                             <div class="col-sm-2">
-                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                                <input type="text"  class="form_datetime form-control" id="FinishDate" placeholder="FinishDate">
                             </div>
-                            <label for="inputPassword3" class="col-sm-1 control-label">AssignTask</label>
+                            <label for="AssignTask" class="col-sm-1 control-label">AssignTask</label>
                             <div class="col-sm-2">
-                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                                <input type="text" class="form-control" id="AssignTask" placeholder="AssignTask">
                             </div>
-                            <label for="inputPassword3" class="col-sm-1 control-label">TestStatus</label>
+                            <label for="TestStatus" class="col-sm-1 control-label">TestStatus</label>
                             <div class="col-sm-2">
-                                <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                                <select class="form-control" >
+                                    <option value="">Select</option>
+                                    <option value="0">Pending</option>
+                                    <option value="1">OnGoing</option>
+                                    <option value="2">Finished</option>
+                                    <option value="3">Cancelled</option>
+                                </select>
                             </div>
                         </div>
-
                         <hr>
-
                         <button type="submit" class="btn btn-info btn-sm col-md-offset-4" ><i class="fas fa-check-circle fa-fw"></i>&nbsp;Submit</button>
                         <button type="submit" class="btn btn-success btn-sm col-md-offset-1"><i class="fa fa-undo fa-fw"></i>&nbsp;Reset</button>
                         <button type="reset" class="btn btn-primary btn-sm col-md-offset-1" id="returnSearch"><i class="fas fa-long-arrow-alt-left fa-fw"></i>&nbsp;Back</button>
+
                     </form>
 
                 </div>
@@ -277,6 +314,7 @@
                 </li>
             </ul>
         </nav>
+
     </div>
 </body>
 </html>
