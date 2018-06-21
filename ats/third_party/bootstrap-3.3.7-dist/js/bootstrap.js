@@ -989,7 +989,7 @@ if (typeof jQuery === 'undefined') {
       })
     })
 
-    this.backdrop(function () {
+      this.backdrop(function () {
       var transition = $.support.transition && that.$element.hasClass('fade')
 
       if (!that.$element.parent().length) {
