@@ -114,8 +114,34 @@
 
         // select2
         $(function () {
-            $('.js-example-basic-single').select2(
-                {width: "100%"}
+            var data = [
+                {
+                    id: 0,
+                    text: 'enhancement'
+                },
+                {
+                    id: 1,
+                    text: 'bug'
+                },
+                {
+                    id: 2,
+                    text: 'duplicate'
+                },
+                {
+                    id: 3,
+                    text: 'invalid'
+                },
+                {
+                    id: 4,
+                    text: 'wontfix'
+                }
+            ];
+
+            $('.js-example-basic-single').select2({
+                    width: "100%",
+                    data: data
+                    // dropdownParent: "#addModal"
+                }
             );
         });
     </script>
@@ -205,7 +231,7 @@
                             <label for="TestImage" class="col-sm-1 control-label">TestImage</label>
                             <div class="col-sm-2">
 <!--                                <input type="text" class="form-control" id="TestImage" placeholder="TestImage">-->
-                                <select class="js-example-basic-single form-control" name="state">
+                                <select class="js-example-basic-single form-control" name="state1">
                                     <option value="AL">Alabama</option>
                                     <option value="WY">Wyoming</option>
                                 </select>
@@ -227,7 +253,11 @@
                             </div>
                             <label for="AssignTask" class="col-sm-1 control-label">AssignTask</label>
                             <div class="col-sm-2">
-                                <input type="text" class="form-control" id="AssignTask" placeholder="AssignTask">
+<!--                                <input type="text" class="form-control" id="AssignTask" placeholder="AssignTask">-->
+                                <select class="form-control" >
+                                    <option value="">JumpStart</option>
+                                    <option value="0">Treboot</option>
+                                </select>
                             </div>
                             <label for="TestStatus" class="col-sm-1 control-label">TestStatus</label>
                             <div class="col-sm-2">
@@ -256,14 +286,159 @@
             </div>
 
             <div class="btn-group" role="group" style="display: none">
-                <button type="button" class="btn btn-success btn-sm"><i class="fa fa-plus fa-fw"></i>&nbsp;Add</button>
-                <button type="button" class="btn btn-info btn-sm"><i class="fa fa-pencil-alt fa-fw"></i>&nbsp;Edit</button>
+                <button type="button" class="btn btn-success btn-sm" id="addTask" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus fa-fw"></i>&nbsp;Add</button>
+                <button type="button" class="btn btn-info btn-sm" id="editTask" data-toggle="modal" data-target="#editModal"><i class="fa fa-pencil-alt fa-fw"></i>&nbsp;Edit</button>
                 <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt  fa-fw"></i>&nbsp;Delete</button>
                 <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-copy  fa-fw"></i>&nbsp;Copy</button>
             </div>
                 <button class="btn btn-warning pull-right btn-sm" href="#"><i class="fa fa-sync fa-spin fa-fw" aria-hidden="true"></i></button>
         </div>
+        <!-- ADD 模态框（Modal） -->
+        <div class="modal fade" id="addModal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Add Test Task</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal form-group-sm">
+                            <div class="form-group">
+                                <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
+                                <div class="col-sm-7">
+                                    <select class="js-example-basic-single form-control" name="state2">
+                                        <option value="AL">Alabama</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
+                                <div class="col-sm-7">
+<!--                                    <input type="password" class="form-control" id="TestItem">-->
+                                    <select class="form-control" >
+                                        <option value="">JumpStart</option>
+                                        <option value="0">Treboot</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TestDMIReset" class="col-sm-3 control-label">TestDMIReset</label>
+                                <div class="col-sm-7">
+                                    <div class="checkbox">
+                                        <label class="text-danger">
+                                            <input type="checkbox"> Use JQ
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
+                                <div class="col-sm-7">
+                                    <input type="email" class="form-control" id="PartNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
+                                <div class="col-sm-7">
+                                    <input type="password" class="form-control" id="SerialNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="oemString" class="col-sm-3 control-label">OEM String</label>
+                                <div class="col-sm-7">
+                                    <input type="password" class="form-control" id="oemString"  disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SwitchID" class="col-sm-3 control-label">SwitchID</label>
+                                <div class="col-sm-3">
+                                    <input type="password" class="form-control" id="SwitchID"  disabled>
+                                </div>
+                            </div>
+                        </form>
 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm">Submit</button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-- Edit 模态框（Modal） -->
+        <div class="modal fade" id="editModal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Edit Test Task</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal form-group-sm">
+                            <div class="form-group">
+                                <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
+                                <div class="col-sm-7">
+                                    <select class="js-example-basic-single form-control" name="state2">
+                                        <option value="AL">Alabama</option>
+                                        <option value="WY">Wyoming</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
+                                <div class="col-sm-7">
+                                    <!--                                    <input type="password" class="form-control" id="TestItem">-->
+                                    <select class="form-control" >
+                                        <option value="">JumpStart</option>
+                                        <option value="0">Treboot</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TestDMIReset" class="col-sm-3 control-label">TestDMIReset</label>
+                                <div class="col-sm-7">
+                                    <div class="checkbox">
+                                        <label class="text-danger">
+                                            <input type="checkbox"> Use JQ
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
+                                <div class="col-sm-7">
+                                    <input type="email" class="form-control" id="PartNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
+                                <div class="col-sm-7">
+                                    <input type="password" class="form-control" id="SerialNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="oemString" class="col-sm-3 control-label">OEM String</label>
+                                <div class="col-sm-7">
+                                    <input type="password" class="form-control" id="oemString"  disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="SwitchID" class="col-sm-3 control-label">SwitchID</label>
+                                <div class="col-sm-3">
+                                    <input type="password" class="form-control" id="SwitchID"  disabled>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm">Submit</button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
         <table class="table table-striped table-hover table-responsive">
             <thead>
                 <tr>
