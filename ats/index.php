@@ -6,35 +6,89 @@
     <title>Auto Test System</title>
     <link href="third_party/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
-    <script src="third_party/bootstrap-3.3.7-dist/js/jquery-3.1.1.js"></script>
+    <script src="third_party/bootstrap-3.3.7-dist/js/jquery-3.1.1.min.js"></script>
     <!-- 包括所有已编译的插件 -->
-    <script src="third_party/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="third_party/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 
     <script src="third_party/pace/pace.js"></script>
     <link href="third_party/pace/themes/blue/pace-theme-flash.css" rel="stylesheet"/>
 
     <!--fa-->
-    <link rel="stylesheet" href="third_party/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.css">
+    <link rel="stylesheet" href="third_party/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">
 
     <!--    datetimepicker-->
-    <link rel="stylesheet" href="third_party/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css">
-    <script src="third_party/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+    <link rel="stylesheet" href="third_party/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css">
+    <script src="third_party/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js"></script>
 
+    <!--    select2-->
     <script type="text/javascript" src="third_party/select2-develop/dist/js/select2.min.js"></script>
     <link rel="stylesheet" type="text/css" href="third_party/select2-develop/dist/css/select2.min.css">
+
+    <!--    toastr-->
+    <link href="third_party/CodeSeven-toastr/build/toastr.min.css" rel="stylesheet" />
+    <script src="third_party/CodeSeven-toastr/build/toastr.min.js"></script>
+
+    <!--    bootstrap dataTables-->
+    <link rel="stylesheet" type="text/css" href="third_party/bootstrap-table-develop/dist/bootstrap-table.min.css">
+    <script type="text/javascript" src="third_party/bootstrap-table-develop/dist/bootstrap-table.min.js"></script>
+    <script type="text/javascript" src="third_party/bootstrap-table-develop/dist/locale/bootstrap-table-en-US.min.js"></script>
+
+    <!--    bootstrap dataTables extensions-->
+    <link rel="stylesheet" href="third_party/bootstrap-table-develop/src/extensions/page-jumpto/bootstrap-table-jumpto.css"></style>
+    <script src="third_party/bootstrap-table-develop/src/extensions/page-jumpto/bootstrap-table-jumpto.js"></script>
 
     <style type="text/css">
         body { padding-top: 70px; }
 
+        /*toast*/
+        /*.toast-center-center {*/
+            /*top: 50%;*/
+            /*left: 50%;*/
+            /*margin-top: -25px;*/
+            /*margin-left: -150px;*/
+        /*}*/
+
     </style>
 
     <script>
-        <!-- Tooltip-->
+
         $(function () {
-            $("[data-toggle='tooltip']").tooltip();
+            toolTipInit();
+
+            popoverInit();
+
+            // searchDetail
+            searchDetailInit();
+
+            //Task
+            taskButton();
+
+            // fa-chevron-circle-down
+            $("i.fa-chevron-circle-down").click(function () {
+                toastr.warning("点我干嘛！");
+            });
+
+            // datetimepickerInit
+            datetimepickerInit();
+
+            // select2
+            select2Init();
+
+            toastrInit();
+
+            tableInit(queryParams);
+
+            searchTaskId();
         });
+
+
+        <!-- Tooltip-->
+        function toolTipInit(){
+            $("[data-toggle='tooltip']").tooltip();
+        };
+
         <!--    popover-->
-        $(function () {
+        function popoverInit(){
             $("[data-toggle='popover']").popover(
                 {
                     trigger: 'manual',
@@ -60,23 +114,21 @@
                     }
                 }, 100);
             });
-        });
-        // searchDetail
-        $(function () {
-            // $('.panel-info').hide();
+        };
+
+        function searchDetailInit(){
+            // searchDetail
             $('#searchDetail').click(function () {
                 $('.row:eq(0)').toggle(10);
-               $('.panel-info').toggle(200);
+                $('.panel-info').toggle(200);
             });
             $('#returnSearch').click(function () {
                 $('.panel-info').toggle();
                 $('.row:eq(0)').toggle(200);
             });
+        };
 
-        });
-
-        // Task
-        $(function () {
+        function taskButton(){
             var buttonGroup=$('.btn-group:eq(2)');
             var time=null;
 
@@ -85,22 +137,16 @@
                 buttonGroup.css('display', 'block');
             });
 
+            // Task
             $('.btn-group:eq(1), .btn-group:eq(2)').mouseleave(function () {
-                    time=setTimeout(function(){
-                        buttonGroup.css('display', 'none');
-                    },300);
+                time=setTimeout(function(){
+                    buttonGroup.css('display', 'none');
+                },300);
             });
-        });
+        };
 
-        // fa-chevron-circle-down
-        $(function () {
-            $("i.fa-chevron-circle-down").click(function () {
-                alert("点我干嘛！");
-            });
-
-        });
-        // datetimepicker
-        $(function () {
+        function datetimepickerInit(){
+            // datetimepicker
             $(".form_datetime").datetimepicker({
                 initialDate: new Date(),
                 bootcssVer:3,
@@ -110,10 +156,11 @@
                 minView: 2,
                 pickerPosition: "bottom-right"
             });
-        });
 
-        // select2
-        $(function () {
+        };
+
+        function  select2Init() {
+            // select2
             var data = [
                 {
                     id: 0,
@@ -143,7 +190,139 @@
                     // dropdownParent: "#addModal"
                 }
             );
-        });
+
+        };
+
+
+        function  toastrInit() {
+
+            // toastr
+            toastr.options.positionClass = 'toast-top-center';
+            toastr.options.closeButton = true;
+            // css
+            // toastr.options.positionClass = 'toast-center-center';
+
+            toastr.options.timeOut = 2000; // How long the toast will display without user interaction
+            toastr.options.extendedTimeOut = 2000; // How long the toast will display after a user hovers over it
+
+            // toastr.options.progressBar = true;
+        }
+
+
+
+        function tableInit(queryPs){
+            $('#taskTable').bootstrapTable({
+                url: 'function/getAtsTaskInfo.php',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                classes: 'table table-responsive table-hover table-no-bordered', // table 样式
+                iconSize: 'sm',
+                buttonsClass: 'warning',
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                striped: true,                      //是否显示行间隔色
+                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true,                   //是否显示分页（*）
+                // sortable: true,                     //是否启用排序
+                // sortOrder: "asc",                   //排序方式
+                queryParamsType : "",                   //默认是limit，则para为params.limit, params.offset
+                queryParams: queryPs,
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber:1,                       //初始化加载第一页，默认第一页
+                pageSize: 10,                       //每页的记录行数（*）
+                pageList: [10, 25, 50],        //可供选择的每页的行数（*）
+                search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端
+                strictSearch: true,
+                showColumns: true,                  //是否显示所有的列
+                showRefresh: true,                  //是否显示刷新按钮
+                minimumCountColumns: 2,             //最少允许的列数
+                clickToSelect: true,                //是否启用点击选中行
+                // height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "TaskID",                     //每一行的唯一标识，一般为主键列
+                showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
+                cardView: false,                    //是否显示详细视图
+                detailView: false,                   //是否显示父子表
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'TaskID',
+                    title: 'TaskID'
+                }, {
+                    field: 'TestMachine',
+                    title: 'Test Machine'
+                }, {
+                    field: 'TestImage',
+                    title: 'Test Image'
+                }, {
+                    field: 'DMI_SerialNumer',
+                    title: 'Serial Numer'
+                }, {
+                    field: 'TestItem',
+                    title: 'Assigned Task'
+                }, {
+                    field: 'TaskStatus',
+                    title: 'Task Status'
+                }, {
+                    field: 'TestStartTime',
+                    title: 'StartDate'
+                }, {
+                    field: 'TestEndTime',
+                    title: 'FinishDate'
+                }, {
+                    field: 'TestResult',
+                    title: 'Test Result'
+                }
+                ],
+                onLoadSuccess: function () {
+                    Pace.restart();
+                },
+                onLoadError: function () {
+                    toastr.error("Table LoadError!");
+                }
+            });
+
+        };
+
+        function queryParams(params) {
+            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                pageSize : params.pageSize,
+                pageNumber : params.pageNumber
+            };
+            return temp;//传递参数（*
+        };
+
+        // click search to send para
+        // function queryParamsSingle(params) {
+        //     var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+        //         limit: params.limit,   //页面大小
+        //         offset: params.offset/params.limit+1, //页码
+        //         taskId:$('#searchTaskNoText').val()
+        //     };
+        //     return temp;//传递参数（*）
+        // };
+
+        function searchTaskId(){
+            $('#searchTaskNo').click(function () {
+                console.log($('#searchTaskNoText').val());
+                $text = $('#searchTaskNoText').val();
+                if ("" === $text || null === $text){
+                    toastr.error("Please Input TaskNo To Search!");
+                    return;
+                }
+
+               $('#taskTable').bootstrapTable('refresh', {
+                   silent: true,
+                   url: 'function/getAtsTaskInfo.php',
+                   // pageSize : pageSize,
+                   // pageNumber : pageNumber,
+                   query: {taskId: $text}
+
+               });
+                tableInit(queryParamsSingle);
+                // $('#table').bootstrapTable('selectPage', 1);
+            });
+
+        }
+
+
     </script>
 
 </head>
@@ -160,7 +339,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><i class="fas fa-cog fa-spin" style="color: blueviolet"></i>
+            <a class="navbar-brand" href="index.php"><i class="fas fa-cog fa-spin" style="color: blueviolet"></i>
                 Auto&nbsp;Test&nbsp;System
             </a>
         </div>
@@ -195,14 +374,14 @@
             <div class="col-sm-offset-3 col-md-offset-8 ">
                 <form class="form-inline">
                     <div class="form-group">
-                        <label class="sr-only" for="exampleInputAmount">TaskNo</label>
+                        <label class="sr-only" for="searchTaskNoText">TaskNo</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fas fa-sort-numeric-up fa-fw"></i><small>&nbsp;TaskNo</small></div>
-                            <input type="text" class="form-control input-sm" id="exampleInputAmount" placeholder="Please input TaskNo">
+                            <input type="text" class="form-control input-sm" id="searchTaskNoText" placeholder="Please input TaskNo">
                         </div>
                     </div>
                     <div class="btn-group">
-                        <a class="btn btn-primary btn-sm" href="#"><i class="fa fa-search-plus fa-fw"></i>&nbsp;Search</a>
+                        <a class="btn btn-primary btn-sm" id="searchTaskNo"><i class="fa fa-search-plus fa-fw"></i>&nbsp&nbsp;Search</a>
                         <a class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" id="searchDetail">
                             <span class="fa fa-caret-down" data-toggle="tooltip" data-placement="right" title="click&nbsp;me!"></span>
                         </a>
@@ -272,27 +451,27 @@
                         </div>
                         <hr>
                         <button type="submit" class="btn btn-info btn-sm col-md-offset-4" ><i class="fas fa-check-circle fa-fw"></i>&nbsp;Submit</button>
-                        <button type="submit" class="btn btn-success btn-sm col-md-offset-1"><i class="fa fa-undo fa-fw"></i>&nbsp;Reset</button>
-                        <button type="reset" class="btn btn-primary btn-sm col-md-offset-1" id="returnSearch"><i class="fas fa-long-arrow-alt-left fa-fw"></i>&nbsp;Back</button>
+                        <button type="reset" class="btn btn-success btn-sm col-md-offset-1"><i class="fa fa-undo fa-fw"></i>&nbsp;Reset</button>
+                        <button class="btn btn-primary btn-sm col-md-offset-1" id="returnSearch"><i class="fas fa-long-arrow-alt-left fa-fw"></i>&nbsp;Back</button>
 
                     </form>
 
                 </div>
             </div>
         <hr>
-            <div class="btn-toolbar" role="toolbar" style="margin-bottom: 20px">
-            <div class="btn-group" role="group" >
-                <button type="button" class="btn btn-primary btn-sm" id="task"><i class="fa fa-tasks fa-fw"></i> Task</button>
-            </div>
+            <div id="toolbar" class="btn-toolbar" role="toolbar">
+                <div class="btn-group" role="group" >
+                    <button type="button" class="btn btn-primary btn-sm" id="task"><i class="fa fa-tasks fa-fw"></i> Task</button>
+                </div>
 
-            <div class="btn-group" role="group" style="display: none">
-                <button type="button" class="btn btn-success btn-sm" id="addTask" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus fa-fw"></i>&nbsp;Add</button>
-                <button type="button" class="btn btn-info btn-sm" id="editTask" data-toggle="modal" data-target="#editModal"><i class="fa fa-pencil-alt fa-fw"></i>&nbsp;Edit</button>
-                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt  fa-fw"></i>&nbsp;Delete</button>
-                <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-copy  fa-fw"></i>&nbsp;Copy</button>
+                <div class="btn-group" role="group" style="display: none">
+                    <button type="button" class="btn btn-success btn-sm" id="addTask" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus fa-fw"></i>&nbsp;Add</button>
+                    <button type="button" class="btn btn-info btn-sm" id="editTask" data-toggle="modal" data-target="#editModal"><i class="fa fa-pencil-alt fa-fw"></i>&nbsp;Edit</button>
+                    <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt  fa-fw"></i>&nbsp;Delete</button>
+                    <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-copy  fa-fw"></i>&nbsp;Copy</button>
+                </div>
+<!--                <button class="btn btn-warning pull-right btn-sm" href="#"><i class="fa fa-sync fa-spin fa-fw" aria-hidden="true"></i></button>-->
             </div>
-                <button class="btn btn-warning pull-right btn-sm" href="#"><i class="fa fa-sync fa-spin fa-fw" aria-hidden="true"></i></button>
-        </div>
         <!-- ADD 模态框（Modal） -->
         <div class="modal fade" id="addModal"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -439,56 +618,10 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
-        <table class="table table-striped table-hover table-responsive">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>TaskID</th>
-                    <th>Test Machine</th>
-                    <th>Test Image</th>
-                    <th>Serial Number</th>
-                    <th>Assigned Task</th>
-                    <th>Test Status</th>
-                    <th>Start Date</th>
-                    <th>Finish Date</th>
-                    <th>Test Result</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th><input type="checkbox"></th>
-                    <td>ats10000</td>
-                    <td>Altari-LE50-CS1-SKU1</td>
-                    <td>TDH0042800B</td>
-                    <td>Zd102073H</td>
-                    <td>Jumpstart Test</td>
-                    <td>ongoing</td>
-                    <td>2018/06/28 9:30:30</td>
-                    <td>2018/06/28 9:30:30</td>
-                    <td>Pass(view)</td>
-                </tr>
 
-            </tbody>
+        <table id="taskTable" class="" data-show-jumpto="true">
         </table>
-        <nav aria-label="Page navigation" class="text-center">
-            <ul class="pagination">
-                <li>
-                    <a href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li>
-                    <a href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+
 
     </div>
 </body>
