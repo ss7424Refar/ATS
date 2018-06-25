@@ -11,3 +11,11 @@
 // 5、当鼠标离开Div2时，使Div2延迟0.5秒消失，这样以便有时间把鼠标指向Div1。1
 //
 // 6、第2步已经设置了鼠标指向Div1，Div2就显示，但由于第5步设置setTimeout使Div2消失，所以在第2步加上clearTimeout()把setTimeout清除了就可以实现Div2显示了。
+
+#php mysqli mysql
+
+mysql是非持继连接函数而mysqli是永远连接函数
+
+也就是说mysql每次链接都会打开一个连接的进程
+
+而mysqli多次运行mysqli将使用同一连接进程,从而减少了服务器的开销

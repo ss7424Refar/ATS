@@ -79,8 +79,14 @@
             tableInit(queryParams);
 
             searchTaskId();
-        });
 
+            // caidan
+            $('#caidan').click(function(){
+                $('#caidanDialog').modal("toggle");;
+
+            });
+
+        });
 
         <!-- Tooltip-->
         function toolTipInit(){
@@ -125,6 +131,7 @@
             $('#returnSearch').click(function () {
                 $('.panel-info').toggle();
                 $('.row:eq(0)').toggle(200);
+                return false;
             });
         };
 
@@ -225,6 +232,7 @@
                 // sortOrder: "asc",                   //排序方式
                 queryParamsType : "",                   //默认是limit，则para为params.limit, params.offset
                 queryParams: queryPs,
+                clickToSelect: false,               //点击行即可选中单选/复选框
                 sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
                 pageNumber:1,                       //初始化加载第一页，默认第一页
                 pageSize: 10,                       //每页的记录行数（*）
@@ -234,7 +242,6 @@
                 showColumns: true,                  //是否显示所有的列
                 showRefresh: true,                  //是否显示刷新按钮
                 minimumCountColumns: 2,             //最少允许的列数
-                clickToSelect: true,                //是否启用点击选中行
                 // height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
                 uniqueId: "TaskID",                     //每一行的唯一标识，一般为主键列
                 showToggle:false,                    //是否显示详细视图和列表视图的切换按钮
@@ -244,7 +251,10 @@
                     checkbox: true
                 }, {
                     field: 'TaskID',
-                    title: 'TaskID'
+                    title: 'TaskID',
+                    formatter:function(value, row, index){
+                        return 'ATS_' + value;
+                    }
                 }, {
                     field: 'TestMachine',
                     title: 'Test Machine'
@@ -259,7 +269,23 @@
                     title: 'Assigned Task'
                 }, {
                     field: 'TaskStatus',
-                    title: 'Task Status'
+                    title: 'Task Status',
+                    formatter:function(value, row, index){
+                        if (0==value){
+                            return "pending";
+                        }else if (1==value){
+                            return "ongoing";
+                        }else if (1==value){
+                            return "ongoing";
+                        }else if (2==value){
+                            return "finished";
+                        }else if (3==value){
+                            return "Cancelled";
+                        }else if (4==value){
+                            return "Abnormal End";
+                        }
+                        return "N/A";
+                    }
                 }, {
                     field: 'TestStartTime',
                     title: 'StartDate'
@@ -268,14 +294,70 @@
                     title: 'FinishDate'
                 }, {
                     field: 'TestResult',
-                    title: 'Test Result'
+                    title: 'Test Result',
+                    formatter: function(value, row, index){
+                        if("fail"==value){
+                            return '<a target="_blank" href=file://' + row.TestResultPath  + '><i class="fas fa-times fa-fw"></i>&nbsp;' + value + '</a>';
+                        } else if("pass"==value){
+                            return '<a target="_blank" href=file://' + row.TestResultPath + '><i class="fas fa-check fa-fw"></i>&nbsp;' + value + '</a>';
+                        }
+                        // return '';
+                            return ;
+                        // return "<a href=" +  + "></a>";
+                    }
                 }
                 ],
-                onLoadSuccess: function () {
+                rowStyle: function(row, index){
+                    if("fail"==row.TestResult){
+                        return {classes: 'danger'};
+                    }else if("pass"==row.TestResult){
+                        return {classes: 'active'};
+                    }else if(0==row.TaskStatus){
+                        return {classes: 'info'};
+                    }
+                    return {classes: 'warning'};
+                },
+
+                formatLoadingMessage: function () {
+                    return '<i class="fas fa-spinner fa-2x fa-pulse" style="color:#96B97D"></i>';
+                },
+                // 当页面更改页码或页面大小时触发
+                onPageChange: function () {
+                     Pace.restart();
+                },
+                // 当页面更改页码或页面大小时触发
+                onRefresh: function () {
                     Pace.restart();
                 },
                 onLoadError: function () {
                     toastr.error("Table LoadError!");
+                },
+                onDblClickRow: function (row, $element) {
+                    // $element.addClass('btn-success');
+                    var taskId=row.TaskID;
+                    $.ajax({
+                        type: "get",
+                        url: "function/atsController.php?do=checkTaskId&" + "taskID=" + taskId,
+                        dataType: "json",
+                        success: function (result) {
+                            console.log(result);
+                            if(true ==result){
+                                $("#dmiInfo").modal("toggle");
+
+                            } else{
+                                toastr.info("TaskID = " + taskId + " didn't found! <br> Please Refresh Table!");
+                            }
+                        },
+                        error:function (xhr,status,error) {
+                            toastr.error(xhr.status + " " + xhr.statusText);
+                        }
+                    });
+
+                     console.log(row.TaskID);
+                },
+
+                formatNoMatches: function () {  //没有匹配的结果
+                    return '<i class="text-danger">No matching records found</i>';
                 }
             });
 
@@ -311,12 +393,10 @@
                $('#taskTable').bootstrapTable('refresh', {
                    silent: true,
                    url: 'function/getAtsTaskInfo.php',
-                   // pageSize : pageSize,
-                   // pageNumber : pageNumber,
                    query: {taskId: $text}
 
                });
-                tableInit(queryParamsSingle);
+                //tableInit(queryParamsSingle);
                 // $('#table').bootstrapTable('selectPage', 1);
             });
 
@@ -392,7 +472,7 @@
 
             <div class="panel panel-info" style="display: none">
                 <div class="panel panel-heading">
-                    <small><i class="fas fa-search-plus fa-fw">&nbsp;Search</i></small>
+                    <small id="caidan"><i class="fas fa-search-plus fa-fw">&nbsp;Search</i></small>
                     <i class="fas fa-chevron-circle-down fa-fw pull-right"></i>
                 </div>
                 <div class="panel-body">
@@ -587,25 +667,25 @@
                             <div class="form-group">
                                 <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
                                 <div class="col-sm-7">
-                                    <input type="email" class="form-control" id="PartNumber" disabled>
+                                    <input type="text" class="form-control" id="PartNumber" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-7">
-                                    <input type="password" class="form-control" id="SerialNumber" disabled>
+                                    <input type="text" class="form-control" id="SerialNumber" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="oemString" class="col-sm-3 control-label">OEM String</label>
                                 <div class="col-sm-7">
-                                    <input type="password" class="form-control" id="oemString"  disabled>
+                                    <input type="text" class="form-control" id="oemString"  disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="SwitchID" class="col-sm-3 control-label">SwitchID</label>
                                 <div class="col-sm-3">
-                                    <input type="password" class="form-control" id="SwitchID"  disabled>
+                                    <input type="text" class="form-control" id="SwitchID"  disabled>
                                 </div>
                             </div>
                         </form>
@@ -621,7 +701,63 @@
 
         <table id="taskTable" class="" data-show-jumpto="true">
         </table>
+<!--        dmi info-->
+        <div class="modal fade" id="dmiInfo"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">DMI INFO</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal form-group-sm">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Task ID</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static">Task ID</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Part Number</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static">email@example.com</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">OEM String</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static">email@example.comemail@example.comemail@example.com</p>
+                                </div>
+                            </div>
+                        </form>
 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--        caidanDialog-->
+        <div class="modal fade bs-example-modal-sm" id="caidanDialog"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">ATS彩蛋</h4>
+                    </div>
+                    <div class="modal-body text-center" >
+                        <img src="resource/pic/caidan.png">
+                    </div>
+                    <div class="modal-footer">
+                        <blockquote>
+                            <i class="text-info">扫一扫，有惊喜！</i>
+                            <button type="button" class="btn btn-default btn-primary btn-sm" data-dismiss="modal">关闭</button>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 </body>
