@@ -301,8 +301,7 @@
                         } else if("pass"==value){
                             return '<a target="_blank" href=file://' + row.TestResultPath + '><i class="fas fa-check fa-fw"></i>&nbsp;' + value + '</a>';
                         }
-                        // return '';
-                            return ;
+                        return '';
                         // return "<a href=" +  + "></a>";
                     }
                 }
