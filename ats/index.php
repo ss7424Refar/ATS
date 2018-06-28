@@ -168,37 +168,65 @@
 
         function  select2Init() {
             // select2
-            var data = [
-                {
-                    id: 0,
-                    text: 'enhancement'
-                },
-                {
-                    id: 1,
-                    text: 'bug'
-                },
-                {
-                    id: 2,
-                    text: 'duplicate'
-                },
-                {
-                    id: 3,
-                    text: 'invalid'
-                },
-                {
-                    id: 4,
-                    text: 'wontfix'
-                }
-            ];
+            // var data = [
+            //     {
+            //         id: 0,
+            //         text: 'enhancement'
+            //     },
+            //     {
+            //         id: 1,
+            //         text: 'bug'
+            //     },
+            //     {
+            //         id: 2,
+            //         text: 'duplicate'
+            //     },
+            //     {
+            //         id: 3,
+            //         text: 'invalid'
+            //     },
+            //     {
+            //         id: 4,
+            //         text: 'wontfix'
+            //     }
+            // ];
 
             $('.js-example-basic-single').select2({
                     width: "100%",
-                    data: data
-                    // dropdownParent: "#addModal"
+                    // data: data
+                    ajax: {
+                        url: 'demo/fileLoop.php',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            return {
+                                q: params.term // search term
+                            };
+                        },
+                        processResults: function (data) {
+                            return {
+                                results: data
+                            };
+                        },
+                        cache: true
+                    },
+                // // 字符转义处理
+                //     escapeMarkup: function (markup) { return markup; },
+                // // 最小需要输入
+                // minimumInputLength: 2
+
                 }
             );
 
         };
+
+
+
+        // function formatRepoProvince(repo) {
+        //     if (repo.loading) return repo.text;
+        //     var markup = "<div>"+repo.name+"</div>";
+        //     return markup;
+        // }
 
 
         function  toastrInit() {
@@ -490,8 +518,8 @@
                             <div class="col-sm-2">
 <!--                                <input type="text" class="form-control" id="TestImage" placeholder="TestImage">-->
                                 <select class="js-example-basic-single form-control" name="state1">
-                                    <option value="AL">Alabama</option>
-                                    <option value="WY">Wyoming</option>
+<!--                                    <option value="AL">Alabama</option>-->
+<!--                                    <option value="WY">Wyoming</option>-->
                                 </select>
                             </div>
                             <label for="SerialNo" class="col-sm-1 control-label">SerialNo</label>
