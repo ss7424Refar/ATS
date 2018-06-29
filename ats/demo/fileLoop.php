@@ -6,7 +6,7 @@
  * Time: 2:06 PM
  */
 
-$path = '/home/refar';
+$path = '\\\\192.168.1.190\\ssh';
 $query = isset($_GET['q']) ? $_GET['q'] : '';
 $handler = opendir($path);
 
