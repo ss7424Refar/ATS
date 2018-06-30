@@ -74,6 +74,9 @@
             // select2
             select2Init();
 
+            //modal中使用Select2搜索框无法输入
+            $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+
             toastrInit();
 
             tableInit(queryParams);
@@ -85,6 +88,9 @@
                 $('#caidanDialog').modal("toggle");;
 
             });
+
+            // Diaglog
+            DialogCheckBox();
 
         });
 
@@ -167,33 +173,10 @@
         };
 
         function  select2Init() {
-            // select2
-            // var data = [
-            //     {
-            //         id: 0,
-            //         text: 'enhancement'
-            //     },
-            //     {
-            //         id: 1,
-            //         text: 'bug'
-            //     },
-            //     {
-            //         id: 2,
-            //         text: 'duplicate'
-            //     },
-            //     {
-            //         id: 3,
-            //         text: 'invalid'
-            //     },
-            //     {
-            //         id: 4,
-            //         text: 'wontfix'
-            //     }
-            // ];
+            var testImageSelect = $("select[name='testImage']");
 
-            $('.js-example-basic-single').select2({
+            testImageSelect.select2({
                     width: "100%",
-                    // data: data
                     ajax: {
                         url: 'demo/fileLoop.php',
                         dataType: 'json',
@@ -210,13 +193,41 @@
                         },
                         cache: true
                     },
-                // // 字符转义处理
-                //     escapeMarkup: function (markup) { return markup; },
-                // // 最小需要输入
-                // minimumInputLength: 2
-
+                placeholder:'please select',
+                allowClear:true
                 }
             );
+
+            var testMachine = $("select[name='testMachine']");
+            testMachine.select2({
+                width: "100%",
+                ajax: {
+                    url: 'function/readAddData.php',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term // search term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                },
+                placeholder:'please select',
+                allowClear:true
+            });
+            $("select[name='testMachine']:eq(0)").on("select2:select",function(e){
+                // var data = e.params.data;
+                // console.log(data.text);
+
+
+
+
+            });
 
         };
 
@@ -285,7 +296,10 @@
                     }
                 }, {
                     field: 'TestMachine',
-                    title: 'Test Machine'
+                    title: 'Test Machine',
+                    formatter:function(value, row, index){
+                        return value;
+                    }
                 }, {
                     field: 'TestImage',
                     title: 'Test Image'
@@ -427,7 +441,34 @@
                 // $('#table').bootstrapTable('selectPage', 1);
             });
 
-        }
+        };
+
+        function DialogCheckBox(){
+            $("input[name='setOrNot']").change(function () {
+                if($("input[name='setOrNot']").prop('checked')){
+                    alert(1);
+                    $("span[name='dmiShowMs']").text("you can setDMI by yourself if you unchecked");
+
+                    $('#addPartNumber').attr('disabled', 'disabled');
+                    $('#addSerialNumber').attr('disabled','disabled');
+                    $('#addoemString').attr('disabled','disabled');
+                    $('#addSwitchID').attr('disabled','disabled');
+
+                }else{
+                    alert(2);
+                    $("span[name='dmiShowMs']").text("check if you want reset DMI data to default");
+
+                    $('#addPartNumber').removeAttr('disabled');
+                    $('#addSerialNumber').removeAttr('disabled');
+                    $('#addoemString').removeAttr('disabled');
+                    $('#addSwitchID').removeAttr('disabled');
+                }
+
+            });
+
+
+        };
+
 
 
     </script>
@@ -517,9 +558,7 @@
                             <label for="TestImage" class="col-sm-1 control-label">TestImage</label>
                             <div class="col-sm-2">
 <!--                                <input type="text" class="form-control" id="TestImage" placeholder="TestImage">-->
-                                <select class="js-example-basic-single form-control" name="state1">
-<!--                                    <option value="AL">Alabama</option>-->
-<!--                                    <option value="WY">Wyoming</option>-->
+                                <select class="form-control" name="testImage">
                                 </select>
                             </div>
                             <label for="SerialNo" class="col-sm-1 control-label">SerialNo</label>
@@ -592,16 +631,13 @@
                             <div class="form-group">
                                 <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
                                 <div class="col-sm-7">
-                                    <select class="js-example-basic-single form-control" name="state2">
-                                        <option value="AL">Alabama</option>
-                                        <option value="WY">Wyoming</option>
+                                    <select class="form-control" name="testMachine">
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-7">
-<!--                                    <input type="password" class="form-control" id="TestItem">-->
                                     <select class="form-control" >
                                         <option value="">JumpStart</option>
                                         <option value="0">Treboot</option>
@@ -609,11 +645,18 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label for="TestImage" class="col-sm-3 control-label">Test Image</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" name="testImage">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label for="TestDMIReset" class="col-sm-3 control-label">TestDMIReset</label>
                                 <div class="col-sm-7">
                                     <div class="checkbox">
-                                        <label class="text-danger">
-                                            <input type="checkbox"> Use JQ
+                                        <label class="text-danger ">
+                                            <input name="setOrNot" type="checkbox" checked="checked"><span class="small" name="dmiShowMs">you can setDMI by yourself if you unchecked</span>
                                         </label>
                                     </div>
                                 </div>
@@ -621,25 +664,25 @@
                             <div class="form-group">
                                 <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
                                 <div class="col-sm-7">
-                                    <input type="email" class="form-control" id="PartNumber" disabled>
+                                    <input type="text" class="form-control" id="addPartNumber" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-7">
-                                    <input type="password" class="form-control" id="SerialNumber" disabled>
+                                    <input type="text" class="form-control" id="addSerialNumber" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="oemString" class="col-sm-3 control-label">OEM String</label>
                                 <div class="col-sm-7">
-                                    <input type="password" class="form-control" id="oemString"  disabled>
+                                    <input type="text" class="form-control" id="addoemString"  disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="SwitchID" class="col-sm-3 control-label">SwitchID</label>
                                 <div class="col-sm-3">
-                                    <input type="password" class="form-control" id="SwitchID"  disabled>
+                                    <input type="text" class="form-control" id="addSwitchID"  disabled>
                                 </div>
                             </div>
                         </form>
@@ -665,19 +708,23 @@
                             <div class="form-group">
                                 <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
                                 <div class="col-sm-7">
-                                    <select class="js-example-basic-single form-control" name="state2">
-                                        <option value="AL">Alabama</option>
-                                        <option value="WY">Wyoming</option>
+                                    <select class="form-control" name="state2">
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-7">
-                                    <!--                                    <input type="password" class="form-control" id="TestItem">-->
                                     <select class="form-control" >
                                         <option value="">JumpStart</option>
                                         <option value="0">Treboot</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TestImage" class="col-sm-3 control-label">Test Image</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" name="testImage">
                                     </select>
                                 </div>
                             </div>
@@ -785,7 +832,7 @@
                 </div>
             </div>
         </div>
-
+        <input name="setOrNot" type="checkbox" checked="checked"><span class="small" name="dmiShowMs">you can setDMI by yourself if you unchecked</span>
     </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 //Task 实现
 
-//         1、获取元素。
+// 1、获取元素。
 //
 // 2、当鼠标指向Div1时，Div2显示。
 //
@@ -19,5 +19,13 @@ mysql是非持继连接函数而mysqli是永远连接函数
 而mysqli多次运行mysqli将使用同一连接进程,从而减少了服务器的开销
 
 # get TestImage
-// Finish 等文件
+// Finish /Prepare等文件
 ###需要挂载window的共享文件夹到linux下。mount -t cifs -o username= password= $path /mnt
+#读取某一路径下的文件名称
+
+#get TestMachine
+#读取文件内容
+
+#memo
+Test Machine 填入值之后，再联动到SwitchID。假如存在两台相同的电脑，这个时候只能看资产编号才能判断是什么switchID了。
+如果这样的话，逻辑基本要全部改掉。
