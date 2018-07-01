@@ -37,6 +37,10 @@
     <link rel="stylesheet" href="third_party/bootstrap-table-develop/src/extensions/page-jumpto/bootstrap-table-jumpto.css"></style>
     <script src="third_party/bootstrap-table-develop/src/extensions/page-jumpto/bootstrap-table-jumpto.js"></script>
 
+    <!-- bootstrap-editable -->
+    <link href="third_party/bootstrap3-editable-1.5.1/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet">
+    <script src="third_party/bootstrap3-editable-1.5.1/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
     <style type="text/css">
         body { padding-top: 70px; }
 
@@ -77,6 +81,9 @@
             //modal中使用Select2搜索框无法输入
             $.fn.modal.Constructor.prototype.enforceFocus = function () {};
 
+            // // 在脚本中禁止自动完成
+            // function init() { element.setAttribute("AutoComplete", "off"); }
+
             toastrInit();
 
             tableInit(queryParams);
@@ -91,6 +98,9 @@
 
             // Diaglog
             DialogCheckBox();
+
+            // x-editable
+            editableInit();
 
         });
 
@@ -191,7 +201,7 @@
                                 results: data
                             };
                         },
-                        cache: true
+                        cache: false
                     },
                 placeholder:'please select',
                 allowClear:true
@@ -215,30 +225,39 @@
                             results: data
                         };
                     },
-                    cache: true
+                    cache: false
                 },
                 placeholder:'please select',
                 allowClear:true
             });
-            $("select[name='testMachine']:eq(0)").on("select2:select",function(e){
+            var addMachine = $("select[name='testMachine']:eq(0)");
+            addMachine.on("select2:select",function(e){
+                console.log(addMachine.val());
+                var data = addMachine.val();
                 // var data = e.params.data;
                 // console.log(data.text);
+                $.ajax({
+                    type: 'get',
+                    url: 'function/readDmiInfoFromCSV.php',
+                    data: {switchId: data},
+                    dataType: 'json',
+                    success: function(result){
+                        $('#addPartNumber').val(result[0].pn);
+                        $('#addSerialNumber').val(result[0].sn);
+                        $('#addoemString').val(result[0].oem);
+                        $('#addSwitchID').val(data);
+                    },
+                    error: function () {
 
+                    }
+
+                });
 
 
 
             });
 
         };
-
-
-
-        // function formatRepoProvince(repo) {
-        //     if (repo.loading) return repo.text;
-        //     var markup = "<div>"+repo.name+"</div>";
-        //     return markup;
-        // }
-
 
         function  toastrInit() {
 
@@ -304,8 +323,10 @@
                     field: 'TestImage',
                     title: 'Test Image'
                 }, {
-                    field: 'DMI_SerialNumer',
-                    title: 'Serial Numer'
+                    // field: 'DMI_SerialNumer',
+                    // title: 'Serial Numer'
+                    field: 'MachineID',
+                    title: 'MachineID'
                 }, {
                     field: 'TestItem',
                     title: 'Assigned Task'
@@ -444,24 +465,22 @@
         };
 
         function DialogCheckBox(){
-            $("input[name='setOrNot']").change(function () {
-                if($("input[name='setOrNot']").prop('checked')){
-                    alert(1);
-                    $("span[name='dmiShowMs']").text("you can setDMI by yourself if you unchecked");
+            $("#setOrNot").prop("checked",true);
 
-                    $('#addPartNumber').attr('disabled', 'disabled');
-                    $('#addSerialNumber').attr('disabled','disabled');
-                    $('#addoemString').attr('disabled','disabled');
-                    $('#addSwitchID').attr('disabled','disabled');
+            $("#setOrNot").change(function () {
+                if($("#setOrNot").prop('checked')){
+
+                    $("span[name='dmiShowMs']").text("you can setDMI by yourself if you unchecked");
+                    $('#addSn').editable('disable');
+                    $('#addPn').editable('disable');
+                    $('#addOem').editable('disable');
 
                 }else{
-                    alert(2);
                     $("span[name='dmiShowMs']").text("check if you want reset DMI data to default");
+                    $('#addSn').editable('enable');
+                    $('#addPn').editable('enable');
+                    $('#addOem').editable('enable');
 
-                    $('#addPartNumber').removeAttr('disabled');
-                    $('#addSerialNumber').removeAttr('disabled');
-                    $('#addoemString').removeAttr('disabled');
-                    $('#addSwitchID').removeAttr('disabled');
                 }
 
             });
@@ -469,7 +488,28 @@
 
         };
 
+        // bootstrap x-editable
+        function editableInit(){
+            // inline or popup (default)
+            $.fn.editable.defaults.mode = 'popup';
 
+            $('#addSn').editable('disable', {
+                type: 'text',
+                pk: 1,
+                title: 'reset SN'
+            });
+            $('#addPn').editable('disable', {
+                type: 'text',
+                pk: 2,
+                title: 'reset PN'
+            });
+            $('#addOem').editable('disable', {
+                    type: 'text',
+                    pk: 3,
+                    title: 'reset OEM'
+                }
+            );
+        };
 
     </script>
 
@@ -655,34 +695,38 @@
                                 <label for="TestDMIReset" class="col-sm-3 control-label">TestDMIReset</label>
                                 <div class="col-sm-7">
                                     <div class="checkbox">
-                                        <label class="text-danger ">
-                                            <input name="setOrNot" type="checkbox" checked="checked"><span class="small" name="dmiShowMs">you can setDMI by yourself if you unchecked</span>
+                                        <label class="text-danger">
+                                            <input type="checkbox" id="setOrNot"><span class="small" name="dmiShowMs">you can setDMI by yourself if you unchecked</span>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
+                                <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="addPartNumber" disabled>
+<!--                                    <input type="text" class="form-control" id="addSerialNumber" disabled>-->
+                                    <a href="#" id="addSn" class="small">Empty</a>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
+                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="addSerialNumber" disabled>
+<!--                                    <input type="text" class="form-control" id="addPartNumber" disabled>-->
+                                    <a href="#" id="addPn" class="small">Empty</a>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="oemString" class="col-sm-3 control-label">OEM String</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="addoemString"  disabled>
+<!--                                    <input type="text" class="form-control" id="addoemString"  disabled>-->
+                                    <a href="#" id="addOem" class="small">Empty</a>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="SwitchID" class="col-sm-3 control-label">SwitchID</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="addSwitchID"  disabled>
+                                <label class="col-sm-3 control-label">SwitchID</label>
+                                <div class="col-sm-2">
+<!--                                    <input type="text" class="form-control" id="addSwitchID"  disabled>-->
+                                    <span class="small">Empty</span>
                                 </div>
                             </div>
                         </form>
@@ -739,15 +783,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
-                                <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="PartNumber" disabled>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-7">
                                     <input type="text" class="form-control" id="SerialNumber" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="PartNumber" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -758,8 +802,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="SwitchID" class="col-sm-3 control-label">SwitchID</label>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control" id="SwitchID"  disabled>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="SwitchID">
                                 </div>
                             </div>
                         </form>
@@ -789,6 +833,12 @@
                                 <label class="col-sm-3 control-label">Task ID</label>
                                 <div class="col-sm-8">
                                     <p class="form-control-static">Task ID</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Serial Number</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static">email@example.com</p>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -832,16 +882,7 @@
                 </div>
             </div>
         </div>
-        <input name="setOrNot" type="checkbox" checked="checked"><span class="small" name="dmiShowMs">you can setDMI by yourself if you unchecked</span>
     </div>
 </body>
 </html>
 
-
-<?php
-/**
- * Created by PhpStorm.
- * User: refar
- * Date: 18-6-17
- * Time: 上午10:09
- */

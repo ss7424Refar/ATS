@@ -17,11 +17,11 @@ while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
     $line++;
     if ($line>=2){
         if (empty(trim($query))) {
-            $tmpArray = array('id' => $data[0], 'text' => $data[1]);
+            $tmpArray = array('id' => $data[5], 'text' => $data[1]);
             array_push($jsonResult, $tmpArray);
         }else {
             if (stristr($data[1], $query) !== false){
-                $tmpArray = array('id' => $data[0], 'text' => $data[1]);
+                $tmpArray = array('id' => $data[5], 'text' => $data[1]);
                 array_push($jsonResult, $tmpArray);
             }
 

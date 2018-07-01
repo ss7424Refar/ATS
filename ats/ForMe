@@ -20,7 +20,9 @@ mysql是非持继连接函数而mysqli是永远连接函数
 
 # get TestImage
 // Finish /Prepare等文件
-###需要挂载window的共享文件夹到linux下。mount -t cifs -o username= password= $path /mnt
+###需要挂载window的共享文件夹到linux下
+# mount -t cifs -o username='812647742@qq.com' //192.168.0.106/download /mnt
+// ubuntu17.04/centos则需要重新安装 1) yum search cifs-utils 2) yum install cifs-utils -y
 #读取某一路径下的文件名称
 
 #get TestMachine

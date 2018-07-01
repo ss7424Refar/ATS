@@ -7,7 +7,9 @@
  */
 
 //$path = '\\\\192.168.1.190\\ssh';
-$path='/home/refar';
+//$path='/home/refar';
+$path='/mnt';
+
 $query = isset($_GET['q']) ? $_GET['q'] : '';
 $handler = opendir($path);
 

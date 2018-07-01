@@ -31,7 +31,7 @@ mysqli_set_charset($conn,"utf8");
 
 // ------------------get_ats_testtask_info_Count & Info-------
 
-$tableHeader = "TaskID, TestMachine, TestImage, DMI_SerialNumer, ".
+$tableHeader = "TaskID, TestMachine, TestImage, MachineID, ".
     "TestItem,  TaskStatus, TestStartTime, TestEndTime, TestResult,".
     "TestResultPath";
 
