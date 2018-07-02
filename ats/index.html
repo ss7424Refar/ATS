@@ -100,7 +100,7 @@
             DialogCheckBox();
 
             // x-editable
-            editableInit();
+            // editableInit();
 
         });
 
@@ -465,22 +465,16 @@
         };
 
         function DialogCheckBox(){
-            $("#setOrNot").prop("checked",true);
+            $('input[name="dmiReset"]:eq(0)').prop('checked', 'true');
+            var dmiReset = $('input[name="dmiReset"]');
 
-            $("#setOrNot").change(function () {
-                if($("#setOrNot").prop('checked')){
+            dmiReset.change(function () {
+                var va = $(this).val();
 
-                    $("span[name='dmiShowMs']").text("you can setDMI by yourself if you unchecked");
-                    $('#addSn').editable('disable');
-                    $('#addPn').editable('disable');
-                    $('#addOem').editable('disable');
-
-                }else{
-                    $("span[name='dmiShowMs']").text("check if you want reset DMI data to default");
-                    $('#addSn').editable('enable');
-                    $('#addPn').editable('enable');
-                    $('#addOem').editable('enable');
-
+                if ("disable" === va) {
+                    alert(1);
+                } else if("enable" === va) {
+                    alert(2);
                 }
 
             });
@@ -489,27 +483,27 @@
         };
 
         // bootstrap x-editable
-        function editableInit(){
-            // inline or popup (default)
-            $.fn.editable.defaults.mode = 'popup';
-
-            $('#addSn').editable('disable', {
-                type: 'text',
-                pk: 1,
-                title: 'reset SN'
-            });
-            $('#addPn').editable('disable', {
-                type: 'text',
-                pk: 2,
-                title: 'reset PN'
-            });
-            $('#addOem').editable('disable', {
-                    type: 'text',
-                    pk: 3,
-                    title: 'reset OEM'
-                }
-            );
-        };
+        // function editableInit(){
+        //     // inline or popup (default)
+        //     $.fn.editable.defaults.mode = 'popup';
+        //
+        //     $('#addSn').editable('disable', {
+        //         type: 'text',
+        //         pk: 1,
+        //         title: 'reset SN'
+        //     });
+        //     $('#addPn').editable('disable', {
+        //         type: 'text',
+        //         pk: 2,
+        //         title: 'reset PN'
+        //     });
+        //     $('#addOem').editable('disable', {
+        //             type: 'text',
+        //             pk: 3,
+        //             title: 'reset OEM'
+        //         }
+        //     );
+        // };
 
     </script>
 
@@ -673,12 +667,13 @@
                                 <div class="col-sm-7">
                                     <select class="form-control" name="testMachine">
                                     </select>
+                                    <span class="help-block"><small>Required if you choose Test Machine</small></span>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" >
+                                    <select class="form-control" name="testItem">
                                         <option value="">JumpStart</option>
                                         <option value="0">Treboot</option>
                                     </select>
@@ -689,14 +684,20 @@
                                 <div class="col-sm-7">
                                     <select class="form-control" name="testImage">
                                     </select>
+                                    <small class="help-block">Required if you choose Test Machine</small>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="TestDMIReset" class="col-sm-3 control-label">TestDMIReset</label>
                                 <div class="col-sm-7">
-                                    <div class="checkbox">
-                                        <label class="text-danger">
-                                            <input type="checkbox" id="setOrNot"><span class="small" name="dmiShowMs">you can setDMI by yourself if you unchecked</span>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="dmiReset" value="disable" /> Default(disable)
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="dmiReset" value="enable" /> Reset(enable)
                                         </label>
                                     </div>
                                 </div>
@@ -704,33 +705,28 @@
                             <div class="form-group">
                                 <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-7">
-<!--                                    <input type="text" class="form-control" id="addSerialNumber" disabled>-->
-                                    <a href="#" id="addSn" class="small">Empty</a>
+                                    <input type="text" class="form-control" name="addSerialNumber" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
                                 <div class="col-sm-7">
-<!--                                    <input type="text" class="form-control" id="addPartNumber" disabled>-->
-                                    <a href="#" id="addPn" class="small">Empty</a>
+                                    <input type="text" class="form-control" name="addPartNumber" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="oemString" class="col-sm-3 control-label">OEM String</label>
                                 <div class="col-sm-7">
-<!--                                    <input type="text" class="form-control" id="addoemString"  disabled>-->
-                                    <a href="#" id="addOem" class="small">Empty</a>
+                                    <input type="text" class="form-control" name="addOemString"  disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">SwitchID</label>
-                                <div class="col-sm-2">
-<!--                                    <input type="text" class="form-control" id="addSwitchID"  disabled>-->
-                                    <span class="small">Empty</span>
+                                <div class="col-sm-3">
+                                    <p class="form-control-static">email@example.com</p>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm">Submit</button>

@@ -29,5 +29,4 @@ mysql是非持继连接函数而mysqli是永远连接函数
 #读取文件内容
 
 #memo
-Test Machine 填入值之后，再联动到SwitchID。假如存在两台相同的电脑，这个时候只能看资产编号才能判断是什么switchID了。
-如果这样的话，逻辑基本要全部改掉。
+TestPC.csv是直接获取机子的dmi信息。tpms则需要根据用户是否修改dmi做相应的修改。
