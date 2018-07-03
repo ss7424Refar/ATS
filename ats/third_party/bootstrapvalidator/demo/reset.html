@@ -132,6 +132,8 @@ $(document).ready(function() {
             var $form     = $(e.target),
                 validator = $form.data('bootstrapValidator');
 
+            alert(1);
+
             // Show the modal
             var fullName = [validator.getFieldElements('firstName').val(),
                             validator.getFieldElements('lastName').val()].join(' ');
@@ -139,9 +141,9 @@ $(document).ready(function() {
                 .find('.welcome').html('Hello ' + fullName).end()
                 .modal('show');
 
-            $form
-                .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
-                .bootstrapValidator('resetForm', true);             // Reset the form
+            // $form
+            //     .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
+            //     .bootstrapValidator('resetForm', true);             // Reset the form
         });
 });
 

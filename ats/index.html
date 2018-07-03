@@ -2,6 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
     <link rel="shortcut icon" href="resource/pic/3.ico"/>
     <title>Auto Test System</title>
     <link href="third_party/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
@@ -99,13 +104,118 @@
 
             });
 
+            // $("form").each(function(){
+            //     // this.reset();
+            //     // $(this).children(".input").val('');
+            //
+            // });
+
             // Diaglog
             DialogCheckBox();
 
             // x-editable
             // editableInit();
 
-            addTaskFormValidate();
+            // addTaskFormValidate();
+
+
+            $('#addTaskForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    testMachine: {
+                        message: 'the testMachine is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The testMachine is required and can\'t be empty'
+                            }
+                        }
+                    },
+                    testImage: {
+                        message: 'the testImage is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The sn is required and can\'t be empty'
+                            }
+                        }
+                    },
+                    addSerialNumber: {
+                        message: 'the sn is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The sn is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 10,
+                                message: 'The sn must be more than 5 and less than 10 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
+                                message: 'The sn can only consist of alphabetical, number, dot and underscore'
+                            },
+
+                        }
+                    },
+                    addPartNumber: {
+                        message: 'the pn is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The pn is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 20,
+                                message: 'The pn must be more than 5 and less than 20 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
+                                message: 'The pn can only consist of alphabetical, number, dot and underscore'
+                            },
+
+                        }
+                    },
+                    addOemString: {
+                        message: 'the oem is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The oem is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 30,
+                                message: 'The oem must be more than 5 and less than 30 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
+                                message: 'The oem can only consist of alphabetical, number, dot and underscore'
+                            },
+
+                        }
+                    }
+                }
+
+            }).on('success.form.bv', function(e) {
+                // Prevent form submission
+                e.preventDefault();
+
+                // Get the form instance
+                var $form = $(e.target);
+
+                // Get the BootstrapValidator instance
+                var bv = $form.data('bootstrapValidator');
+
+
+                // Use Ajax to submit form data
+                // $.post($form.attr('action'), $form.serialize(), function(result) {
+                //     console.log(result);
+                // }, 'json');
+            });
+
 
         });
 
@@ -235,32 +345,32 @@
                 placeholder:'please select',
                 allowClear:true
             });
-            var addMachine = $("select[name='testMachine']:eq(0)");
-            addMachine.on("select2:select",function(e){
-                console.log(addMachine.val());
-                var data = addMachine.val();
-                // var data = e.params.data;
-                // console.log(data.text);
-                $.ajax({
-                    type: 'get',
-                    url: 'function/readDmiInfoFromCSV.php',
-                    data: {switchId: data},
-                    dataType: 'json',
-                    success: function(result){
-                        $('#addPartNumber').val(result[0].pn);
-                        $('#addSerialNumber').val(result[0].sn);
-                        $('#addoemString').val(result[0].oem);
-                        $('#addSwitchID').val(data);
-                    },
-                    error: function () {
-
-                    }
-
-                });
-
-
-
-            });
+            // var addMachine = $("select[name='testMachine']:eq(0)");
+            // addMachine.on("select2:select",function(e){
+            //     console.log(addMachine.val());
+            //     var data = addMachine.val();
+            //     // var data = e.params.data;
+            //     // console.log(data.text);
+            //     $.ajax({
+            //         type: 'get',
+            //         url: 'function/readDmiInfoFromCSV.php',
+            //         data: {switchId: data},
+            //         dataType: 'json',
+            //         success: function(result){
+            //             $('#addPartNumber').val(result[0].pn);
+            //             $('#addSerialNumber').val(result[0].sn);
+            //             $('#addoemString').val(result[0].oem);
+            //             $('#addSwitchID').val(data);
+            //         },
+            //         error: function () {
+            //
+            //         }
+            //
+            //     });
+            //
+            //
+            //
+            // });
 
         };
 
@@ -471,30 +581,33 @@
 
         function DialogCheckBox(){
             var dmiReset = $('input[name="dmiReset"]');
-
             var sn = $('input[name="addSerialNumber"]');
             var pn = $('input[name="addPartNumber"]');
             var oem = $('input[name="addOemString"]');
             var switchId = $('input[name="addSwitchID"]');
 
             $('input[name="dmiReset"]:eq(0)').prop('checked', 'true');
+            sn.attr('readonly', 'readonly');
+            pn.attr('readonly','readonly');
+            oem.attr('readonly','readonly');
+            switchId.attr('readonly','readonly');
 
             dmiReset.change(function () {
                 var va = $(this).val();
 
                 if ("disable" === va) {
-                    $('#addTaskForm').data('bootstrapValidator').resetForm(true);
-                    sn.attr('disabled', 'disabled');
-                    pn.attr('disabled','disabled');
-                    oem.attr('disabled','disabled');
-                    switchId.attr('disabled','disabled');
+                    // $('#addTaskForm').data('bootstrapValidator').resetForm(true);
+                    sn.attr('readonly', 'readonly');
+                    pn.attr('readonly','readonly');
+                    oem.attr('readonly','readonly');
+                    switchId.attr('readonly','readonly');
 
                 } else if("enable" === va) {
                     // $('#addTaskForm').data('bootstrapValidator').resetForm(true);
-                    sn.removeAttr('disabled');
-                    pn.removeAttr('disabled');
-                    oem.removeAttr('disabled');
-                    switchId.removeAttr('disabled');
+                    sn.removeAttr('readonly');
+                    pn.removeAttr('readonly');
+                    oem.removeAttr('readonly');
+                    switchId.removeAttr('readonly');
                 }
 
             });
@@ -502,108 +615,9 @@
 
         };
 
-        function addTaskFormValidate() {
 
-            $('#addTaskForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    testMachine: {
-                        message: 'the testMachine is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The testMachine is required and can\'t be empty'
-                            }
-                        }
-                    },
-                    testImage: {
-                        message: 'the testImage is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The sn is required and can\'t be empty'
-                            }
-                        }
-                    },
-                    addSerialNumber: {
-                        message: 'the sn is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The sn is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 5,
-                                max: 10,
-                                message: 'The sn must be more than 5 and less than 10 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
-                                message: 'The sn can only consist of alphabetical, number, dot and underscore'
-                            },
 
-                        }
-                    },
-                    addPartNumber: {
-                        message: 'the pn is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The pn is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 5,
-                                max: 20,
-                                message: 'The pn must be more than 5 and less than 20 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
-                                message: 'The pn can only consist of alphabetical, number, dot and underscore'
-                            },
 
-                        }
-                    },
-                    addOemString: {
-                        message: 'the oem is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The oem is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 5,
-                                max: 30,
-                                message: 'The oem must be more than 5 and less than 30 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
-                                message: 'The oem can only consist of alphabetical, number, dot and underscore'
-                            },
-
-                        }
-                    }
-                }
-
-            }).on('success.form.bv', function(e) {
-                // Prevent form submission
-                e.preventDefault();
-
-                // Get the form instance
-                var $form = $(e.target);
-
-                // Get the BootstrapValidator instance
-                var bv = $form.data('bootstrapValidator');
-
-                $form
-                    .bootstrapValidator('disableSubmitButtons', false)  // Enable the submit buttons
-                    .bootstrapValidator('resetForm', true);             // Reset the form
-
-                // Use Ajax to submit form data
-                // $.post($form.attr('action'), $form.serialize(), function(result) {
-                //     console.log(result);
-                // }, 'json');
-            });
-        };
         // bootstrap x-editable
         // function editableInit(){
         //     // inline or popup (default)
@@ -711,7 +725,7 @@
                             <div class="col-sm-2">
                                 <input type="text" class="form-control" id="TestPC" placeholder="TestPC">
                             </div>
-                            <label for="TestImage" class="col-sm-1 control-label">TestImage</label>
+                            <label class="col-sm-1 control-label">TestImage</label>
                             <div class="col-sm-2">
 <!--                                <input type="text" class="form-control" id="TestImage" placeholder="TestImage">-->
                                 <select class="form-control" name="testImage">
@@ -732,7 +746,7 @@
                             <div class="col-sm-2">
                                 <input type="text"  class="form_datetime form-control" id="FinishDate" placeholder="FinishDate">
                             </div>
-                            <label for="AssignTask" class="col-sm-1 control-label">AssignTask</label>
+                            <label class="col-sm-1 control-label">AssignTask</label>
                             <div class="col-sm-2">
 <!--                                <input type="text" class="form-control" id="AssignTask" placeholder="AssignTask">-->
                                 <select class="form-control" >
@@ -740,7 +754,7 @@
                                     <option value="0">Treboot</option>
                                 </select>
                             </div>
-                            <label for="TestStatus" class="col-sm-1 control-label">TestStatus</label>
+                            <label class="col-sm-1 control-label">TestStatus</label>
                             <div class="col-sm-2">
                                 <select class="form-control" >
                                     <option value="">Select</option>
@@ -780,12 +794,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="myModalLabel">Add Test Task</h4>
+                        <h4 class="modal-title" >Add Test Task</h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form-horizontal form-group-sm" id="addTaskForm" method="post" action="target.php">
+                        <form class="form-horizontal form-group-sm" id="addTaskForm" method="post">
                             <div class="form-group">
-                                <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
+                                <label class="col-sm-3 control-label">Test Machine</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="testMachine">
                                     </select>
@@ -793,7 +807,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
+                                <label class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="testItem">
                                         <option value="">JumpStart</option>
@@ -802,7 +816,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="TestImage" class="col-sm-3 control-label">Test Image</label>
+                                <label class="col-sm-3 control-label">Test Image</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="testImage">
                                     </select>
@@ -810,7 +824,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="TestDMIReset" class="col-sm-3 control-label">TestDMIReset</label>
+                                <label class="col-sm-3 control-label">TestDMIReset</label>
                                 <div class="col-sm-9">
                                     <div class="radio">
                                         <label>
@@ -825,21 +839,21 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
+                                <label class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="addSerialNumber" disabled>
+                                    <input type="text" class="form-control" name="addSerialNumber">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
+                                <label class="col-sm-3 control-label">Part Number</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="addPartNumber" disabled>
+                                    <input type="text" class="form-control" name="addPartNumber">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="oemString" class="col-sm-3 control-label">OEM String</label>
+                                <label class="col-sm-3 control-label">OEM String</label>
                                 <div class="col-sm-9">
-                                    <input type="text" class="form-control" name="addOemString"  disabled>
+                                    <input type="text" class="form-control" name="addOemString" >
                                 </div>
                             </div>
                             <div class="form-group">
@@ -848,10 +862,16 @@
                                     <p class="form-control-static">email@example.com</p>
                                 </div>
                             </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                                <button type="reset" class="btn btn-primary btn-sm">reset</button>
+                                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        <button type="reset" class="btn btn-primary btn-sm">reset</button>
                         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
                     </div>
                 </div><!-- /.modal-content -->
