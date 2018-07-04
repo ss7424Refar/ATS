@@ -18,7 +18,7 @@ if(!empty($switchId)){
     while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
         $line++;
         if ($line>=2){
-            if (stristr($data[5], $switchId) !== false){
+            if ($data[5]== $switchId){
                 $tmpArray = array('sn' => $data[7], 'pn' => $data[8], 'oem' => $data[9]);
                 array_push($jsonResult, $tmpArray);
             }

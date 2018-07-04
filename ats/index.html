@@ -345,32 +345,32 @@
                 placeholder:'please select',
                 allowClear:true
             });
-            // var addMachine = $("select[name='testMachine']:eq(0)");
-            // addMachine.on("select2:select",function(e){
-            //     console.log(addMachine.val());
-            //     var data = addMachine.val();
-            //     // var data = e.params.data;
-            //     // console.log(data.text);
-            //     $.ajax({
-            //         type: 'get',
-            //         url: 'function/readDmiInfoFromCSV.php',
-            //         data: {switchId: data},
-            //         dataType: 'json',
-            //         success: function(result){
-            //             $('#addPartNumber').val(result[0].pn);
-            //             $('#addSerialNumber').val(result[0].sn);
-            //             $('#addoemString').val(result[0].oem);
-            //             $('#addSwitchID').val(data);
-            //         },
-            //         error: function () {
-            //
-            //         }
-            //
-            //     });
-            //
-            //
-            //
-            // });
+            var addMachine = $("select[name='testMachine']:eq(0)");
+            addMachine.on("select2:select",function(e){
+                console.log(addMachine.val());
+                var data = addMachine.val();
+                // var data = e.params.data;
+                // console.log(data.text);
+                $.ajax({
+                    type: 'get',
+                    url: 'function/readDmiInfoFromCSV.php',
+                    data: {switchId: data},
+                    dataType: 'json',
+                    success: function(result){
+                        $('#addPartNumber').val(result[0].pn);
+                        $('#addSerialNumber').val(result[0].sn);
+                        $('#addoemString').val(result[0].oem);
+                        $('#addSwitchID').val(data);
+                    },
+                    error: function () {
+
+                    }
+
+                });
+
+
+
+            });
 
         };
 

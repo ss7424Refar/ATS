@@ -2,6 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <!--不缓存-->
+    <META HTTP-EQUIV="pragma" CONTENT="no-cache">
+    <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate">
+    <META HTTP-EQUIV="expires" CONTENT="0">
+
     <link href="../third_party/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
     <script src="../third_party/bootstrap-3.3.7-dist/js/jquery-3.1.1.min.js"></script>
@@ -17,102 +22,23 @@
 
     <script>
         $(function () {
-            $('#addTaskForm').bootstrapValidator({
-                message: 'This value is not valid',
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    testMachine: {
-                        message: 'the testMachine is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The testMachine is required and can\'t be empty'
-                            }
-                        }
-                    },
-                    testImage: {
-                        message: 'the testImage is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The sn is required and can\'t be empty'
-                            }
-                        }
-                    },
-                    addSerialNumber: {
-                        message: 'the sn is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The sn is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 5,
-                                max: 10,
-                                message: 'The sn must be more than 5 and less than 10 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
-                                message: 'The sn can only consist of alphabetical, number, dot and underscore'
-                            },
 
-                        }
-                    },
-                    addPartNumber: {
-                        message: 'the pn is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The pn is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 5,
-                                max: 20,
-                                message: 'The pn must be more than 5 and less than 20 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
-                                message: 'The pn can only consist of alphabetical, number, dot and underscore'
-                            },
+            $('#addTaskForm').find('input[type="text"]').val('');
 
-                        }
-                    },
-                    addOemString: {
-                        message: 'the oem is not valid',
-                        validators: {
-                            notEmpty: {
-                                message: 'The oem is required and can\'t be empty'
-                            },
-                            stringLength: {
-                                min: 5,
-                                max: 30,
-                                message: 'The oem must be more than 5 and less than 30 characters long'
-                            },
-                            regexp: {
-                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
-                                message: 'The oem can only consist of alphabetical, number, dot and underscore'
-                            },
+            var dmiReset = $('input[name="dmiReset"]');
+            var sn = $('input[name="addSerialNumber"]');
+            var pn = $('input[name="addPartNumber"]');
+            var oem = $('input[name="addOemString"]');
+            var switchId = $('input[name="addSwitchID"]');
 
-                        }
-                    }
-                }
-
-            }).on('success.form.bv', function (e) {
-                // Prevent form submission
-                e.preventDefault();
-
-                // Get the form instance
-                var $form = $(e.target);
-
-                // Get the BootstrapValidator instance
-                var bv = $form.data('bootstrapValidator');
+            $('input[name="dmiReset"]:eq(0)').prop('checked', 'true');
+            sn.attr('readonly', 'readonly');
+            pn.attr('readonly','readonly');
+            oem.attr('readonly','readonly');
+            switchId.attr('readonly','readonly');
 
 
-                Use Ajax to submit form data
-                $.post($form.attr('action'), $form.serialize(), function(result) {
-                    console.log(result);
-                }, 'json');
-            });
+            formValidator();
 
             // machine
 
@@ -135,8 +61,8 @@
                     },
                     cache: false
                 },
-                // placeholder:'please select',
-                // allowClear:true
+                placeholder:'please select',
+                allowClear:true
             });
 
 
@@ -167,40 +93,175 @@
                 }
             );
 
+            var addMachine = $("select[name='testMachine']:eq(0)");
+            addMachine.on("select2:select",function(e){
+                console.log(addMachine.val());
+                var data = addMachine.val();
+                // var data = e.params.data;
+                // console.log(data.text);
+                $.ajax({
+                    type: 'get',
+                    url: '../function/readDmiInfoFromCSV.php',
+                    data: {switchId: data},
+                    dataType: 'json',
+                    success: function(result){
+                        // $('#addTaskForm').data('bootstrapValidator').destroy();
+                        // formValidator();
+                        console.log(result[0].pn);
+                        pn.val(result[0].pn);
+                        sn.val(result[0].sn);
+                        oem.val(result[0].oem);
+                        $('#addTaskForm').find('p').html(data);
+                        // $('#addSwitchID').val(data);
+                    },
+                    error: function () {
 
-            var dmiReset = $('input[name="dmiReset"]');
-            var sn = $('input[name="addSerialNumber"]');
-            var pn = $('input[name="addPartNumber"]');
-            var oem = $('input[name="addOemString"]');
-            var switchId = $('input[name="addSwitchID"]');
 
-            $('input[name="dmiReset"]:eq(0)').prop('checked', 'true');
-            sn.attr('readonly', 'readonly');
-            pn.attr('readonly','readonly');
-            oem.attr('readonly','readonly');
-            switchId.attr('readonly','readonly');
+                    }
+
+                });
+
+
+
+            });
 
             dmiReset.change(function () {
+
+                var bootstrapValidator = $('#addTaskForm').data('bootstrapValidator');
                 var va = $(this).val();
 
                 if ("disable" === va) {
+                    alert(1);
                     // $('#addTaskForm').data('bootstrapValidator').resetForm(true);
                     sn.attr('readonly', 'readonly');
                     pn.attr('readonly','readonly');
                     oem.attr('readonly','readonly');
                     switchId.attr('readonly','readonly');
 
+                    bootstrapValidator.enableFieldValidators('addSerialNumber', false);
+                    bootstrapValidator.enableFieldValidators('addPartNumber', false);
+                    bootstrapValidator.enableFieldValidators('addOemString', false);
+
                 } else if("enable" === va) {
+                    alert(2);
                     // $('#addTaskForm').data('bootstrapValidator').resetForm(true);
                     sn.removeAttr('readonly');
                     pn.removeAttr('readonly');
                     oem.removeAttr('readonly');
                     switchId.removeAttr('readonly');
+
+                    bootstrapValidator.enableFieldValidators('addSerialNumber', true);
+                    bootstrapValidator.enableFieldValidators('addPartNumber', true);
+                    bootstrapValidator.enableFieldValidators('addOemString', true);
+
                 }
 
             });
 
         });
+
+        function formValidator(){
+            $('#addTaskForm').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    testMachine: {
+                        message: 'the testMachine is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The testMachine is required and can\'t be empty'
+                            }
+                        }
+                    },
+                    testImage: {
+                        message: 'the testImage is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The sn is required and can\'t be empty'
+                            }
+                        }
+                    },
+                    addSerialNumber: {
+                        enabled: false,
+                        message: 'the sn is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The sn is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 10,
+                                message: 'The sn must be more than 5 and less than 10 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
+                                message: 'The sn can only consist of alphabetical, number, dot and underscore'
+                            },
+
+                        }
+                    },
+                    addPartNumber: {
+                        enabled: false,
+                        message: 'the pn is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The pn is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 20,
+                                message: 'The pn must be more than 5 and less than 20 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
+                                message: 'The pn can only consist of alphabetical, number, dot and underscore'
+                            },
+
+                        }
+                    },
+                    addOemString: {
+                        enabled: false,
+                        message: 'the oem is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The oem is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 50,
+                                message: 'The oem must be more than 5 and less than 40 characters long'
+                            },
+                            regexp: {
+                                // regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
+                                regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
+                                message: 'The oem can only consist of alphabetical, number, dot and underscore'
+                            },
+
+                        }
+                    }
+                }
+
+            }).on('success.form.bv', function (e) {
+                // Prevent form submission
+                e.preventDefault();
+
+                // Get the form instance
+                var $form = $(e.target);
+
+                // Get the BootstrapValidator instance
+                var bv = $form.data('bootstrapValidator');
+
+
+                // Use Ajax to submit form data
+                $.post($form.attr('action'), $form.serialize(), function(result) {
+                    console.log(result);
+                }, 'json');
+            });
+        }
 
     </script>
 </head>
@@ -269,7 +330,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label">SwitchID</label>
                 <div class="col-sm-3">
-                    <p class="form-control-static">email@example.com</p>
+                    <p class="form-control-static"></p>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary btn-sm">Submit</button>
