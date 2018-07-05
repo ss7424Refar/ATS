@@ -6,17 +6,17 @@
  * Time: 上午9:44
  */
 
-require_once 'atsTestTaskInfo.class.php';
+require_once 'atsTestTask.class.php';
 $action=isset($_GET['do']) ? isset($_GET['do']) : '';
 
 // handler
 if(!empty($action)){
     // $atsTaskInfo
-    $atsTaskInfo = new atsTestTaskInfo;
+    $atsTask = new atsTestTask;
     switch ($action){
         case 'checkTaskId':
             $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
-            $atsTaskInfo->checkTaskIdExist($taskID);
+            $atsTask->checkTaskIdExist($taskID);
 
         default:
     }

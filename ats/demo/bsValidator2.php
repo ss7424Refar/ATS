@@ -26,10 +26,6 @@
             $('#addTaskForm').find('input[type="text"]').val('');
 
             var cstCh = $('input[name="customer"]');
-            var sn = $('p[name="addSerialNumber"]');
-            var pn = $('input[name="addPartNumber"]');
-            var oem = $('input[name="addOemString"]');
-            var switchId = $('input[name="addSwitchID"]');
 
             var defa = $('input[name="customer"]:eq(0)');
             defa.prop('checked', 'true');

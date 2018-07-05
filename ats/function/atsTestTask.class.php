@@ -8,7 +8,7 @@
 
 require_once 'dbConnect.php';
 
-class atsTestTaskInfo{
+class atsTestTask{
 
     private $tableName="ats_testtask_info";
 
