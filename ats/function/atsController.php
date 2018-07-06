@@ -17,6 +17,11 @@ if(!empty($action)){
         case 'checkTaskId':
             $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
             $atsTask->checkTaskIdExist($taskID);
+        case 'addTask':
+            $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
+            $atsTask->checkTaskIdExist($taskID);
+
+
 
         default:
     }

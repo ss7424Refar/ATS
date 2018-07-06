@@ -92,7 +92,7 @@
             };
 
             // // 在脚本中禁止自动完成
-            // function init() { element.setAttribute("AutoComplete", "off"); }
+            function init() { element.setAttribute("AutoComplete", "off"); }
 
             toastrInit();
 
@@ -192,8 +192,8 @@
         };
 
         function  select2Init() {
-            var testImageSelect = $("select[name='testImage']");
-            testImageSelect.select2({
+            var testImage = $("select[name='testImage']");
+            testImage.select2({
                     width: "100%",
                     ajax: {
                         url: 'demo/fileLoop.php',
@@ -339,6 +339,7 @@
         };
 
         function addFormValidatorInit(){
+
             $('#addTaskForm').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {
@@ -433,12 +434,28 @@
                 // Get the BootstrapValidator instance
                 var bv = $form.data('bootstrapValidator');
 
+                var testMachine = $("select[name='testMachine']:eq(0)").select2('data')[0].text;
+                var testItem = $('input[name="testItem"]  option:selected').text();
+                console.log(testItem);
+                console.log($('#addTaskForm').serialize());
+                var testImage = $("select[name='testImage']:eq(1)").select2('data')[0].text;
                 if ($('input[name="customer"]:eq(0)').prop('checked')){
+                    alert("hh");
                     // Use Ajax to submit form data
                     $.ajax({
-                        type : "post",
-                        url : "add.php",
-                        data: $('#addForm').serialize(),
+                        type : "get",
+                        url: "function/atsController.php?do=addTask",
+                        data: {
+                            testMachine: testMachine,
+                            testItem: testItem,
+                            testImage: testImage,
+                            customer: 'default',
+                            addSN: $('div[data-topic="pDmiInfo"]').find('p:eq(0)').text(),
+                            addPN: $('div[data-topic="pDmiInfo"]').find('p:eq(1)').text(),
+                            addOem: $('div[data-topic="pDmiInfo"]').find('p:eq(2)').text(),
+                            switchId: $('div[data-topic="pDmiInfo"]').find('p:eq(3)').text(),
+                        },
+                        // data: $('#addForm').serialize(),
                         success : function (result) {
                             if (result == "success") {
 
@@ -447,6 +464,7 @@
                             }
                         },
                         error : function(result){
+
                         },
                         complete : function () {
                             $('#myAdd').modal('hide');
@@ -777,8 +795,9 @@
                             <div class="col-sm-2">
 <!--                                <input type="text" class="form-control" id="AssignTask" placeholder="AssignTask">-->
                                 <select class="form-control" >
-                                    <option value="">JumpStart</option>
-                                    <option value="0">Treboot</option>
+                                    <option value="0">Please Select</option>
+                                    <option value="1">JumpStart</option>
+                                    <option value="2">Treboot</option>
                                 </select>
                             </div>
                             <label class="col-sm-1 control-label">TestStatus</label>
@@ -824,7 +843,7 @@
                         <h4 class="modal-title" >Add Test Task</h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form-horizontal form-group-sm" id="addTaskForm" method="post" action="post.php">
+                        <form class="form-horizontal form-group-sm" id="addTaskForm" method="post">
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Test Machine</label>
                                 <div class="col-sm-9">
@@ -837,8 +856,9 @@
                                 <label class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="testItem">
-                                        <option value="">JumpStart</option>
-                                        <option value="0">Treboot</option>
+                                        <option value="0" selected="selected">Please Select</option>
+                                        <option value="1">JumpStart</option>
+                                        <option value="2">Treboot</option>
                                     </select>
                                 </div>
                             </div>
@@ -948,8 +968,9 @@
                                 <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-7">
                                     <select class="form-control" >
-                                        <option value="">JumpStart</option>
-                                        <option value="0">Treboot</option>
+                                        <option value="0">Please Select</option>
+                                        <option value="1">JumpStart</option>
+                                        <option value="2">Treboot</option>
                                     </select>
                                 </div>
                             </div>
