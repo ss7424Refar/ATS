@@ -1,3 +1,9 @@
+<?php
+session_start();
+// 存储 session 数据
+$_SESSION['user']=daring;
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -242,21 +248,22 @@
             var addMachine = $("select[name='testMachine']:eq(0)");
             addMachine.on("select2:select",function(e){
                 console.log(addMachine.val());
-                var data = addMachine.val();
+                var machineId = addMachine.val();
                 // var data = e.params.data;
                 // console.log(data.text);
                 if ($('input[name="customer"]:eq(0)').prop('checked')){
                     $.ajax({
                         type: 'get',
                         url: 'function/readDmiInfoFromCSV.php',
-                        data: {switchId: data},
+                        data: {machineId: machineId},
                         dataType: 'json',
                         success: function(result){
                             $('div[data-topic="pDmiInfo"]').css('display', 'block');
-                            $('p:eq(0)').html(result[0].pn);
-                            $('p:eq(1)').html(result[0].sn);
-                            $('p:eq(2)').html(result[0].oem);
-                            $('p:eq(3)').html(data);
+                            $('div[data-topic="pDmiInfo"] p:eq(0)').html(result[0].pn);
+                            $('div[data-topic="pDmiInfo"] p:eq(1)').html(result[0].sn);
+                            $('div[data-topic="pDmiInfo"] p:eq(2)').html(result[0].oem);
+                            $('div[data-topic="pDmiInfo"] p:eq(3)').html(result[0].lanIp);
+                            $('div[data-topic="pDmiInfo"] p:eq(4)').html(result[0].shelfId);
 
                         },
                         error: function () {
@@ -265,18 +272,31 @@
                         }
                     });
                 } else {
-                    $('div[data-topic="inputDmiInfo"]').find('p').html(addMachine.val());
-                }
-            });
+                    $.ajax({
+                        type: 'get',
+                        url: 'function/readDmiInfoFromCSV.php',
+                        data: {machineId: machineId},
+                        dataType: 'json',
+                        success: function(result){
+                            $('div[data-topic="inputDmiInfo"] p:eq(0)').html(result[0].lanIp);
+                            $('div[data-topic="inputDmiInfo"] p:eq(1)').html(result[0].shelfId);
 
-            addMachine.on("select2:clear", function (e) {
+                        },
+                        error: function () {
+                            toastr.error("Dmi Read Failed");
+                            $('#addModal').modal('hide');
+                        }
+                    });
+
+
+                }
+            }).on("select2:clear", function (e) {
                 alert(4);
                 if ($('input[name="customer"]:eq(0)').prop('checked')){
                     $('div[data-topic="pDmiInfo"]').css('display', 'none').find('p').html('');
                 } else {
-                    $('div[data-topic="inputDmiInfo"]').find('p').html('');
+                    $('div[data-topic="inputDmiInfo"]').find('p').html('N/A');
                 }
-
             });
 
         };
@@ -291,49 +311,24 @@
             cstCh.change(function () {
 
                 $('#addTaskForm').data('bootstrapValidator').destroy();
-                addFormValidatorInit();
 
                 var vadio = $(this).val();
+                var machineId = addMachine.val();
 
                 if ("customer" === vadio) {
                     alert(1);
                     pDmi.css('display', 'none');
                     inputDmi.css('display', 'block');
-                    if(null === addMachine.val()){
-                        inputDmi.find('p').html('');
-                    } else {
-                        inputDmi.find('p').html(addMachine.val());
 
-                    }
-
+                    addMachine.val(null).trigger('change');
+                    inputDmi.find('p').html('N/A');
                 } else if("default" === vadio) {
                     alert(2);
+                    addMachine.val(null).trigger('change');
                     inputDmi.css('display', 'none');
-                    if(null === addMachine.val()){
-                        pDmi.css('display', 'none');
-
-                    } else {
-                        var data = addMachine.val();
-                        $.ajax({
-                            type: 'get',
-                            url: 'function/readDmiInfoFromCSV.php',
-                            data: {switchId: data},
-                            dataType: 'json',
-                            success: function(result){
-                                pDmi.css('display', 'block');
-                                $('p:eq(0)').html(result[0].pn);
-                                $('p:eq(1)').html(result[0].sn);
-                                $('p:eq(2)').html(result[0].oem);
-                                $('p:eq(3)').html(data);
-
-                            },
-                            error: function () {
-                                toastr.error("Dmi Read Failed");
-                                $('#addModal').modal('hide');
-                            }
-                        });
-                    }
+                    pDmi.css('display', 'none');
                 }
+                addFormValidatorInit();
 
             });
         };
@@ -435,39 +430,41 @@
                 var bv = $form.data('bootstrapValidator');
 
                 var testMachine = $("select[name='testMachine']:eq(0)").select2('data')[0].text;
-                var testItem = $('input[name="testItem"]  option:selected').text();
-                console.log(testItem);
-                console.log($('#addTaskForm').serialize());
+                var testItem = $('select[name="testItem"] option:selected').text();
                 var testImage = $("select[name='testImage']:eq(1)").select2('data')[0].text;
+                var machineId = $("select[name='testMachine']:eq(0)").select2('val');
+                // console.log(machineId);
                 if ($('input[name="customer"]:eq(0)').prop('checked')){
-                    alert("hh");
                     // Use Ajax to submit form data
                     $.ajax({
                         type : "get",
                         url: "function/atsController.php?do=addTask",
                         data: {
                             testMachine: testMachine,
+                            machineId: machineId,
                             testItem: testItem,
                             testImage: testImage,
                             customer: 'default',
                             addSN: $('div[data-topic="pDmiInfo"]').find('p:eq(0)').text(),
                             addPN: $('div[data-topic="pDmiInfo"]').find('p:eq(1)').text(),
                             addOem: $('div[data-topic="pDmiInfo"]').find('p:eq(2)').text(),
-                            switchId: $('div[data-topic="pDmiInfo"]').find('p:eq(3)').text(),
+                            lanIp: $('div[data-topic="pDmiInfo"]').find('p:eq(3)').text(),
+                            shelf: $('div[data-topic="pDmiInfo"]').find('p:eq(4)').text(),
                         },
-                        // data: $('#addForm').serialize(),
                         success : function (result) {
+                            console.log(result);
                             if (result == "success") {
-
+                                toastr.success('add success!');
 
                             } else {
+                                toastr.error('add fail! try again ');
                             }
                         },
-                        error : function(result){
-
+                        error : function(xhr,status,error){
+                            toastr.error(xhr.status + ' add fail! ');
                         },
                         complete : function () {
-                            $('#myAdd').modal('hide');
+                            $('#addModal').modal('hide');
                         }
                     });
 
@@ -622,7 +619,7 @@
                         dataType: "json",
                         success: function (result) {
                             console.log(result);
-                            if(true ==result){
+                            if(result){
                                 $("#dmiInfo").modal("toggle");
 
                             } else{
@@ -856,7 +853,6 @@
                                 <label class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-9">
                                     <select class="form-control" name="testItem">
-                                        <option value="0" selected="selected">Please Select</option>
                                         <option value="1">JumpStart</option>
                                         <option value="2">Treboot</option>
                                     </select>
@@ -903,7 +899,13 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">SwitchID</label>
+                                    <label class="col-sm-3 control-label">LANIP</label>
+                                    <div class="col-sm-3">
+                                        <p class="form-control-static"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">ShelfID_LANID</label>
                                     <div class="col-sm-3">
                                         <p class="form-control-static"></p>
                                     </div>
@@ -930,12 +932,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">SwitchID</label>
+                                    <label class="col-sm-3 control-label">LANIP</label>
                                     <div class="col-sm-3">
                                         <p class="form-control-static"></p>
                                     </div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">ShelfID_LANID</label>
+                                    <div class="col-sm-3">
+                                        <p class="form-control-static"></p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary btn-sm">Submit</button>
@@ -968,7 +975,6 @@
                                 <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-7">
                                     <select class="form-control" >
-                                        <option value="0">Please Select</option>
                                         <option value="1">JumpStart</option>
                                         <option value="2">Treboot</option>
                                     </select>

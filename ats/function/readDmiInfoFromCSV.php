@@ -9,17 +9,17 @@
 $path='../resource/TestPC.csv';
 $file = fopen($path,'r');
 
-$switchId=isset($_GET['switchId']) ? $_GET['switchId'] : '';
+$machineId=isset($_GET['machineId']) ? $_GET['machineId'] : '';
 
 $jsonResult=array();
 $line=0;
 
-if(!empty($switchId)){
+if(!empty($machineId)){
     while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
         $line++;
         if ($line>=2){
-            if ($data[5]== $switchId){
-                $tmpArray = array('sn' => $data[7], 'pn' => $data[8], 'oem' => $data[9]);
+            if ($data[2] == $machineId){
+                $tmpArray = array('sn' => $data[7], 'pn' => $data[8], 'oem' => $data[9], 'lanIp' => $data[3], 'shelfId' => $data[0]);
                 array_push($jsonResult, $tmpArray);
             }
         }

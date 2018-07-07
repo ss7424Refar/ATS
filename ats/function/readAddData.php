@@ -16,12 +16,14 @@ $line=0;
 while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
     $line++;
     if ($line>=2){
+        $machineId=$data[2];
+        $appendedTestMachine=$data[1]. "(". $data[2]. ")" ;
         if (empty(trim($query))) {
-            $tmpArray = array('id' => $data[5], 'text' => $data[1]);
+            $tmpArray = array('id' => $machineId, 'text' => $appendedTestMachine);
             array_push($jsonResult, $tmpArray);
         }else {
-            if (stristr($data[1], $query) !== false){
-                $tmpArray = array('id' => $data[5], 'text' => $data[1]);
+            if (stristr($appendedTestMachine, $query) !== false){
+                $tmpArray = array('id' => $machineId, 'text' => $appendedTestMachine);
                 array_push($jsonResult, $tmpArray);
             }
 
