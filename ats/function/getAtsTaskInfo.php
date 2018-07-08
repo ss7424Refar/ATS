@@ -42,7 +42,8 @@ if (!empty($taskIdSingle)) {
 
 } else {
     $sqlCount = "select count(*) from ats_testtask_info";
-    $sqlDetail = "select $tableHeader from ats_testtask_info where  TaskID >= (select TaskID from ats_testtask_info order by TaskID limit $offset, 1) limit $pageSize ";
+//    $sqlDetail = "select $tableHeader from ats_testtask_info where  TaskID >= (select TaskID from ats_testtask_info order by TaskID limit $offset, 1) limit $pageSize ";
+    $sqlDetail = "select $tableHeader from ats_testtask_info order by TaskID desc limit $offset, $pageSize;";
 }
 $resultCount = mysqli_query($conn,$sqlCount);
 $total = mysqli_fetch_array($resultCount)[0];

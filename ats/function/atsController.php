@@ -14,13 +14,6 @@ if(!empty($action)){
     // $atsTaskInfo
     $atsTask = new atsTestTask;
 
-//    if('checkTaskId' == $action) {
-//        $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
-//        $atsTask->checkTaskIdExist($taskID);
-//    } elseif ('addTask' == $action) {
-//        $atsTask->insertAtsTaskInfo(process4InitAddTaskForm());
-//    }
-
     switch ($action){
         case 'checkTaskId':
             $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;

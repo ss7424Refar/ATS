@@ -5,6 +5,7 @@
  * Date: 18-6-25
  * Time: 上午9:52
  */
+session_start();
 
 require_once 'dbConnect.php';
 

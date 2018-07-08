@@ -1,7 +1,7 @@
 <?php
 session_start();
 // 存储 session 数据
-$_SESSION['user']=daring;
+$_SESSION['user']='daring';
 ?>
 
 <!DOCTYPE html>
@@ -465,11 +465,44 @@ $_SESSION['user']=daring;
                         },
                         complete : function () {
                             $('#addModal').modal('hide');
+                            $('#taskTable').bootstrapTable('selectPage', 1);
                         }
                     });
 
                 } else {
+                    // Use Ajax to submit form data
+                    $.ajax({
+                        type : "get",
+                        url: "function/atsController.php?do=addTask",
+                        data: {
+                            testMachine: testMachine,
+                            machineId: machineId,
+                            testItem: testItem,
+                            testImage: testImage,
+                            customer: 'customer',
+                            addSN: $('div[data-topic="inputDmiInfo"]').find('input:eq(0)').text(),
+                            addPN: $('div[data-topic="inputDmiInfo"]').find('input:eq(1)').text(),
+                            addOem: $('div[data-topic="inputDmiInfo"]').find('input:eq(2)').text(),
+                            lanIp: $('div[data-topic="inputDmiInfo"]').find('p:eq(0)').text(),
+                            shelf: $('div[data-topic="inputDmiInfo"]').find('p:eq(1)').text(),
+                        },
+                        success : function (result) {
+                            console.log(result);
+                            if (result == "success") {
+                                toastr.success('add success!');
 
+                            } else {
+                                toastr.error('add fail! try again ');
+                            }
+                        },
+                        error : function(xhr,status,error){
+                            toastr.error(xhr.status + ' add fail! ');
+                        },
+                        complete : function () {
+                            $('#addModal').modal('hide');
+                            $('#taskTable').bootstrapTable('selectPage', 1);
+                        }
+                    });
 
                 }
 
@@ -571,7 +604,7 @@ $_SESSION['user']=daring;
                     }
                 }, {
                     field: 'TestStartTime',
-                    title: 'StartDate'
+                    title: 'StartDate',
                 }, {
                     field: 'TestEndTime',
                     title: 'FinishDate'
@@ -584,7 +617,7 @@ $_SESSION['user']=daring;
                         } else if("pass"==value){
                             return '<a target="_blank" href=file://' + row.TestResultPath + '><i class="fas fa-check fa-fw"></i>&nbsp;' + value + '</a>';
                         }
-                        return '';
+                        return 'not ready';
                         // return "<a href=" +  + "></a>";
                     }
                 }
@@ -604,14 +637,17 @@ $_SESSION['user']=daring;
                     return '<i class="fas fa-spinner fa-2x fa-pulse" style="color:#96B97D"></i>';
                 },
                 // 当页面更改页码或页面大小时触发
-                onLoadSuccess: function () {
-                    Pace.restart();
-                },
+                // onLoadSuccess: function () {
+                //     Pace.restart();
+                // },
                 onLoadError: function () {
                     toastr.error("Table LoadError!");
                 },
+
+
                 onDblClickRow: function (row, $element) {
                     // $element.addClass('btn-success');
+                    console.log($element);
                     var taskId=row.TaskID;
                     $.ajax({
                         type: "get",
@@ -708,7 +744,7 @@ $_SESSION['user']=daring;
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">
-                        <i class="fas fa-user"></i>&nbsp;<span class="text-primary">&nbsp;UserName</span>
+                        <i class="fas fa-user"></i>&nbsp;<span class="text-primary">&nbsp<?php echo $_SESSION['user']; ?> </span>
                     </a>
                 </li>
 
