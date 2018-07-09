@@ -15,9 +15,13 @@ if(!empty($action)){
     $atsTask = new atsTestTask;
 
     switch ($action){
-        case 'checkTaskId':
+        case 'getAtsInfoByTaskId':
             $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
             $atsTask->getAtsTaskInfoByTaskId($taskID);
+            break;
+        case 'getAtsInfoByMultiTaskId':
+            $multiTask=isset($_GET['multiTask']) ? $_GET['multiTask'] : 0;
+            $atsTask->getAtsTaskInfoByTaskId($multiTask);
             break;
         case 'addTask':
             $atsTask->insertAtsTaskInfo(process4InitAddTaskForm());

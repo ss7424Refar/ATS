@@ -45,10 +45,14 @@ class atsTestTask{
 
     }
 
-    function getAtsTaskInfoByMultiTaskId($taskIdArray=null){
+    function getAtsTaskInfoByMultiTaskId($multiTask=null){
         $jsonResult = array();
+//
+//        for(int $i = 0; $i < count($multiTask); $i++){
+//
+//        }
 
-        $sql="select * from $this->atsTaskInfoTable where TaskID=$taskId";
+        $sql="select * from $this->atsTaskInfoTable where TaskID=$multiTask";
         $conn = getDbConnect();
 
         $result=mysqli_query($conn, $sql);

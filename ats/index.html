@@ -702,7 +702,8 @@ $_SESSION['user']='daring';
                                 $("#dmiInfo").find('p:eq(2)').html(result.row['DMI_PartNumber']);
                                 $("#dmiInfo").find('p:eq(3)').html(result.row['DMI_OEMString']);
                                 $("#dmiInfo").modal("toggle");
-                            } else{
+                            }
+                            else{
                                 toastr.info("TaskID = " + taskId + " didn't found! Please Refresh Table!");
                             }
                         },
@@ -762,19 +763,34 @@ $_SESSION['user']='daring';
                     toastr.info("Please select at least one checkbox");
 
                 } else if(ckArr.length >= 1 && ckArr.length<= 5){
-                    // $.ajax({
-                    //     type: 'get',
-                    //    url:
-                    //    dataType: '',
-                    //
-                    //
-                    // });
+                    // var tmpTaskId = "";
+                    // for (var i = 0; i < ckArr.length; i++){
+                    //     tmpTaskId = tmpTaskId + ckArr[i] + ","
+                    // }
+                    // tmpTaskId = tmpTaskId.substring(0, tmpTaskId.length - 1);
+                    $.ajax({
+                        type: "get",
+                        url: "function/atsController.php?do=getAtsInfoByMultiTaskId",
+                        data: {multiTask: ckArr},
+                        success: function (result) {
+                            console.log(result.flag);
+                            if(result.flag){
+                                $("#dmiInfo").find('p:eq(0)').html(result.row['TaskID']);
+                                $("#dmiInfo").find('p:eq(1)').html(result.row['DMI_SerialNumber']);
+                                $("#dmiInfo").find('p:eq(2)').html(result.row['DMI_PartNumber']);
+                                $("#dmiInfo").find('p:eq(3)').html(result.row['DMI_OEMString']);
+                                $("#dmiInfo").modal("toggle");
+                            } else{
+                                toastr.info("TaskID = " + taskId + " didn't found! Please Refresh Table!");
+                            }
+                        },
+                        error:function (xhr,status,error) {
+                            toastr.error(xhr.status + " " + xhr.statusText);
+                        }
+                    });
 
 
-                } else {
-                    toastr.info("You can only assign five task in once time");
                 }
-
 
             });
 
