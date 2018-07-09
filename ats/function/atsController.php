@@ -21,7 +21,7 @@ if(!empty($action)){
             break;
         case 'getAtsInfoByMultiTaskId':
             $multiTask=isset($_GET['multiTask']) ? $_GET['multiTask'] : 0;
-            $atsTask->getAtsTaskInfoByTaskId($multiTask);
+            $atsTask->getAtsTaskInfoByMultiTaskId($multiTask);
             break;
         case 'addTask':
             $atsTask->insertAtsTaskInfo(process4InitAddTaskForm());

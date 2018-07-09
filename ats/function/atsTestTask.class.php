@@ -47,10 +47,15 @@ class atsTestTask{
 
     function getAtsTaskInfoByMultiTaskId($multiTask=null){
         $jsonResult = array();
-//
-//        for(int $i = 0; $i < count($multiTask); $i++){
-//
-//        }
+
+        $pdoc = getPDOConnect();
+
+        // checkTaskId
+
+        for ($i=0; $i<count($multiTask); $i++) {
+
+
+        }
 
         $sql="select * from $this->atsTaskInfoTable where TaskID=$multiTask";
         $conn = getDbConnect();
