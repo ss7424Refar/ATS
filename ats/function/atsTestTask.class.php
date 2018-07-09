@@ -13,7 +13,8 @@ class atsTestTask{
 
     private $atsTaskInfoTable="ats_testtask_info";
 
-    function checkTaskIdExist($taskId=null){
+    function getAtsTaskInfoByTaskId($taskId=null){
+        $jsonResult = array();
 
         $sql="select * from $this->atsTaskInfoTable where TaskID=$taskId";
         $conn = getDbConnect();
@@ -23,24 +24,58 @@ class atsTestTask{
         if($result){
             // 返回记录数
             $rowCount=mysqli_num_rows($result);
+            // 关联数组 one
+            $jsonResult['row']=mysqli_fetch_assoc($result);
             // 释放结果集
             mysqli_free_result($result);
 
             if ($rowCount){
-                echo json_encode(true);
+                $jsonResult['flag'] = true;
             } else {
-                echo json_encode(false);
+                $jsonResult['flag'] = false;
             }
 
         } else {
-            echo json_encode(false);
+            $jsonResult['flag'] = false;
         }
 
         //close
         mysqli_close($conn);
+        echo json_encode($jsonResult);
 
     }
 
+    function getAtsTaskInfoByMultiTaskId($taskIdArray=null){
+        $jsonResult = array();
+
+        $sql="select * from $this->atsTaskInfoTable where TaskID=$taskId";
+        $conn = getDbConnect();
+
+        $result=mysqli_query($conn, $sql);
+
+        if($result){
+            // 返回记录数
+            $rowCount=mysqli_num_rows($result);
+            // 关联数组 one
+            $jsonResult['row']=mysqli_fetch_assoc($result);
+            // 释放结果集
+            mysqli_free_result($result);
+
+            if ($rowCount){
+                $jsonResult['flag'] = true;
+            } else {
+                $jsonResult['flag'] = false;
+            }
+
+        } else {
+            $jsonResult['flag'] = false;
+        }
+
+        //close
+        mysqli_close($conn);
+        echo json_encode($jsonResult);
+
+    }
     function insertAtsTaskInfo($addTaskFormData){
 
         $user = isset($_SESSION['user']) ? $_SESSION['user'] : '';
@@ -48,7 +83,7 @@ class atsTestTask{
         $lanId = $powId;
         $shelfId = explode("_",$addTaskFormData['shelf'])[0];
 
-        $columns = "`TaskID`, `TestImage`, `DMIModifyFlag`, `DMI_PartNumber`, `DMI_SerialNumer`, ".
+        $columns = "`TaskID`, `TestImage`, `DMIModifyFlag`, `DMI_PartNumber`, `DMI_SerialNumber`, ".
             "`DMI_OEMString`, `TestItem`, `TestMachine`, `MachineID`, `PowerID`, `LANID`, `LANIP`, ".
             "`ShelfID`, `TestResult`, `TestResultPath`, `TestStartTime`, `TestEndTime`, `TaskStatus`, `Tester`";
         $sql = "insert into $this->atsTaskInfoTable ($columns)".

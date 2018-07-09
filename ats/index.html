@@ -115,9 +115,24 @@ $_SESSION['user']='daring';
 
             addFormValidatorInit();
 
-            $('#addTaskForm').find('input[type="text"]').val('');
-            $('input[name="customer"]:eq(0)').prop('checked', 'true');
+            // init addModal
+            $('#addModal').on('show.bs.modal', function () {
+                alert(6);
+                $('input[name="customer"]:eq(0)').prop('checked', 'true');
+                $("select[name='testMachine']:eq(0)").val(null).trigger('change');
+                $("select[name='testImage']:eq(1)").val(null).trigger('change');
+                $('div[data-topic="pDmiInfo"]').css('display', 'none');
+                $('div[data-topic="inputDmiInfo"]').css('display', 'none');
+                $('#addTaskForm').data('bootstrapValidator').destroy();
+                addFormValidatorInit();
+            });
 
+            //advise
+            $("#fineInfo").fadeIn();
+            $("#fineInfo").fadeOut(7000);
+
+            //task button
+            assignButtonInit();
         });
         <!-- Tooltip-->
         function toolTipInit(){
@@ -321,6 +336,7 @@ $_SESSION['user']='daring';
                     inputDmi.css('display', 'block');
 
                     addMachine.val(null).trigger('change');
+                    inputDmi.find('input').val('');
                     inputDmi.find('p').html('N/A');
                 } else if("default" === vadio) {
                     alert(2);
@@ -334,7 +350,6 @@ $_SESSION['user']='daring';
         };
 
         function addFormValidatorInit(){
-
             $('#addTaskForm').bootstrapValidator({
                 message: 'This value is not valid',
                 feedbackIcons: {
@@ -348,6 +363,21 @@ $_SESSION['user']='daring';
                         validators: {
                             notEmpty: {
                                 message: 'The testMachine is required and can\'t be empty'
+                            },
+                            callback: {
+                                message: 'The testMachine(except machineId) must be more than 5 and less than 20 characters long',
+                                callback: function (value, validator) {
+                                    var testMachine = $("select[name='testMachine']:eq(0)").select2('data')[0].text;
+                                    if (null != testMachine){
+                                        testMachine =  testMachine.replace(value, '').replace('()','');
+                                    }
+                                    console.log('get_' + value);
+                                    console.log('get_' + testMachine);
+                                    if(testMachine.length >= 5 && testMachine.length <= 20){
+                                        return true;
+                                    }
+                                    return false;
+                                }
                             }
                         }
                     },
@@ -355,12 +385,23 @@ $_SESSION['user']='daring';
                         message: 'the testImage is not valid',
                         validators: {
                             notEmpty: {
-                                message: 'The sn is required and can\'t be empty'
+                                message: 'The testImage is required and can\'t be empty'
+                            },
+                            callback: {
+                                message: 'The testImage must be more than 5 and less than 20 characters long',
+                                callback: function (value, validator) {
+                                    var testImage = $("select[name='testImage']:eq(1)").select2('data')[0].text;
+                                    console.log('get_' + value);
+                                    console.log('get_' + testImage);
+                                    if(testImage.length >= 5 && testImage.length <= 20){
+                                        return true;
+                                    }
+                                    return false;
+                                }
                             }
                         }
                     },
                     addSN: {
-                        // enabled: false,
                         message: 'the sn is not valid',
                         validators: {
                             notEmpty: {
@@ -368,18 +409,17 @@ $_SESSION['user']='daring';
                             },
                             stringLength: {
                                 min: 5,
-                                max: 10,
-                                message: 'The sn must be more than 5 and less than 10 characters long'
+                                max: 20,
+                                message: 'The sn must be more than 5 and less than 20 characters long'
                             },
                             regexp: {
                                 regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
-                                message: 'The sn can only consist of alphabetical, number, dot and underscore'
+                                message: 'The oem can only consist of special character like ~!@#$%^&*-/, , number, en.'
                             },
 
                         }
                     },
                     addPN: {
-                        // enabled: false,
                         message: 'the pn is not valid',
                         validators: {
                             notEmpty: {
@@ -392,7 +432,7 @@ $_SESSION['user']='daring';
                             },
                             regexp: {
                                 regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
-                                message: 'The pn can only consist of alphabetical, number, dot and underscore'
+                                message: 'The oem can only consist of special character like ~!@#$%^&*-/, , number, en.'
                             },
 
                         }
@@ -406,13 +446,13 @@ $_SESSION['user']='daring';
                             },
                             stringLength: {
                                 min: 5,
-                                max: 50,
-                                message: 'The oem must be more than 5 and less than 40 characters long'
+                                max: 100,
+                                message: 'The oem must be more than 5 and less than 100 characters long'
                             },
                             regexp: {
                                 // regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
                                 regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
-                                message: 'The oem can only consist of alphabetical, number, dot and underscore'
+                                message: 'The oem can only consist of special character like ~!@#$%^&*-/, , number, en.'
                             },
 
                         }
@@ -433,6 +473,7 @@ $_SESSION['user']='daring';
                 var testItem = $('select[name="testItem"] option:selected').text();
                 var testImage = $("select[name='testImage']:eq(1)").select2('data')[0].text;
                 var machineId = $("select[name='testMachine']:eq(0)").select2('val');
+
                 // console.log(machineId);
                 if ($('input[name="customer"]:eq(0)').prop('checked')){
                     // Use Ajax to submit form data
@@ -480,9 +521,9 @@ $_SESSION['user']='daring';
                             testItem: testItem,
                             testImage: testImage,
                             customer: 'customer',
-                            addSN: $('div[data-topic="inputDmiInfo"]').find('input:eq(0)').text(),
-                            addPN: $('div[data-topic="inputDmiInfo"]').find('input:eq(1)').text(),
-                            addOem: $('div[data-topic="inputDmiInfo"]').find('input:eq(2)').text(),
+                            addSN: $('div[data-topic="inputDmiInfo"]').find('input:eq(0)').val(),
+                            addPN: $('div[data-topic="inputDmiInfo"]').find('input:eq(1)').val(),
+                            addOem: $('div[data-topic="inputDmiInfo"]').find('input:eq(2)').val(),
                             lanIp: $('div[data-topic="inputDmiInfo"]').find('p:eq(0)').text(),
                             shelf: $('div[data-topic="inputDmiInfo"]').find('p:eq(1)').text(),
                         },
@@ -636,43 +677,39 @@ $_SESSION['user']='daring';
                 formatLoadingMessage: function () {
                     return '<i class="fas fa-spinner fa-2x fa-pulse" style="color:#96B97D"></i>';
                 },
-                // 当页面更改页码或页面大小时触发
                 // onLoadSuccess: function () {
                 //     Pace.restart();
                 // },
                 onLoadError: function () {
                     toastr.error("Table LoadError!");
                 },
-
-
-                onDblClickRow: function (row, $element) {
-                    // $element.addClass('btn-success');
+                formatNoMatches: function () {  //没有匹配的结果
+                    return '<i class="text-danger">No matching records found</i>';
+                }
+            }).on('dbl-click-row.bs.table', function(row, $element, field){
                     console.log($element);
-                    var taskId=row.TaskID;
+                    var taskId=$element.TaskID;
+                    console.log(taskId);
                     $.ajax({
                         type: "get",
                         url: "function/atsController.php?do=checkTaskId&" + "taskID=" + taskId,
                         dataType: "json",
                         success: function (result) {
-                            console.log(result);
-                            if(result){
+                            console.log(result.flag);
+                            if(result.flag){
+                                $("#dmiInfo").find('p:eq(0)').html(result.row['TaskID']);
+                                $("#dmiInfo").find('p:eq(1)').html(result.row['DMI_SerialNumber']);
+                                $("#dmiInfo").find('p:eq(2)').html(result.row['DMI_PartNumber']);
+                                $("#dmiInfo").find('p:eq(3)').html(result.row['DMI_OEMString']);
                                 $("#dmiInfo").modal("toggle");
-
                             } else{
-                                toastr.info("TaskID = " + taskId + " didn't found! <br> Please Refresh Table!");
+                                toastr.info("TaskID = " + taskId + " didn't found! Please Refresh Table!");
                             }
                         },
                         error:function (xhr,status,error) {
                             toastr.error(xhr.status + " " + xhr.statusText);
                         }
                     });
-
-                     console.log(row.TaskID);
-                },
-
-                formatNoMatches: function () {  //没有匹配的结果
-                    return '<i class="text-danger">No matching records found</i>';
-                }
             });
 
         };
@@ -716,7 +753,32 @@ $_SESSION['user']='daring';
 
         };
 
+        function assignButtonInit(){
+            $('#assignTask').click( function () {
+                var ckArr = $('#taskTable').bootstrapTable('getSelections');
+                console.log(ckArr);
 
+                if(ckArr.length == 0){
+                    toastr.info("Please select at least one checkbox");
+
+                } else if(ckArr.length >= 1 && ckArr.length<= 5){
+                    // $.ajax({
+                    //     type: 'get',
+                    //    url:
+                    //    dataType: '',
+                    //
+                    //
+                    // });
+
+
+                } else {
+                    toastr.info("You can only assign five task in once time");
+                }
+
+
+            });
+
+        }
 
 
     </script>
@@ -736,7 +798,7 @@ $_SESSION['user']='daring';
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="index.php"><i class="fas fa-cog fa-spin" style="color: blueviolet"></i>
-                Auto&nbsp;Test&nbsp;System
+                Automation&nbsp;Test&nbsp;Platform
             </a>
         </div>
 
@@ -777,7 +839,7 @@ $_SESSION['user']='daring';
                         </div>
                     </div>
                     <div class="btn-group">
-                        <a class="btn btn-primary btn-sm" id="searchTaskNo"><i class="fa fa-search-plus fa-fw"></i>&nbsp&nbsp;Search</a>
+                        <a class="btn btn-primary btn-sm" id="searchTaskNo"><i class="fa fa-search-plus fa-fw"></i>&nbsp;&nbsp;Search</a>
                         <a class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" id="searchDetail">
                             <span class="fa fa-caret-down" data-toggle="tooltip" data-placement="right" title="click&nbsp;me!"></span>
                         </a>
@@ -854,16 +916,23 @@ $_SESSION['user']='daring';
                 </div>
             </div>
         <hr>
+        <div class="alert alert-info" id="fineInfo" style="display: none">
+            <a href="#" class="close" data-dismiss="alert">
+                &times;
+            </a>
+            <strong><i class="fa fa-hand-point-right fa-fw"></i>&nbsp;Info: </strong><i>&nbsp;You can double click table row to see DMI info.</i>
+        </div>
             <div id="toolbar" class="btn-toolbar" role="toolbar">
                 <div class="btn-group" role="group" >
-                    <button type="button" class="btn btn-primary btn-sm" id="task"><i class="fa fa-tasks fa-fw"></i> Task</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="task"><i class="fa fa-tasks fa-fw"></i>&nbsp;Task</button>
                 </div>
 
                 <div class="btn-group" role="group" style="display: none">
                     <button type="button" class="btn btn-success btn-sm" id="addTask" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus fa-fw"></i>&nbsp;Add</button>
+                    <button type="button" class="btn btn-warning btn-sm" id="assignTask"><i class="fa fa-wrench fa-fw"></i>&nbsp;Assign</button>
                     <button type="button" class="btn btn-info btn-sm" id="editTask" data-toggle="modal" data-target="#editModal"><i class="fa fa-pencil-alt fa-fw"></i>&nbsp;Edit</button>
                     <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt  fa-fw"></i>&nbsp;Delete</button>
-                    <button type="button" class="btn btn-warning btn-sm"><i class="fa fa-copy  fa-fw"></i>&nbsp;Copy</button>
+                    <button type="button" class="btn btn-default btn-sm"><i class="fa fa-copy  fa-fw"></i>&nbsp;Copy</button>
                 </div>
 <!--                <button class="btn btn-warning pull-right btn-sm" href="#"><i class="fa fa-sync fa-spin fa-fw" aria-hidden="true"></i></button>-->
             </div>
@@ -1089,19 +1158,19 @@ $_SESSION['user']='daring';
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-8">
-                                    <p class="form-control-static">email@example.com</p>
+                                    <p class="form-control-static"></p>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Part Number</label>
                                 <div class="col-sm-8">
-                                    <p class="form-control-static">email@example.com</p>
+                                    <p class="form-control-static"></p>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">OEM String</label>
                                 <div class="col-sm-8">
-                                    <p class="form-control-static">email@example.comemail@example.comemail@example.com</p>
+                                    <p class="form-control-static"></p>
                                 </div>
                             </div>
                         </form>

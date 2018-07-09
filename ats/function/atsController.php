@@ -17,7 +17,7 @@ if(!empty($action)){
     switch ($action){
         case 'checkTaskId':
             $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
-            $atsTask->checkTaskIdExist($taskID);
+            $atsTask->getAtsTaskInfoByTaskId($taskID);
             break;
         case 'addTask':
             $atsTask->insertAtsTaskInfo(process4InitAddTaskForm());

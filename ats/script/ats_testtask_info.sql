@@ -3,7 +3,7 @@ CREATE TABLE `ats_testtask_info` (
   `TestImage` varchar(20) DEFAULT NULL,
   `DMIModifyFlag` int(1) DEFAULT NULL,
   `DMI_PartNumber` varchar(20) DEFAULT NULL,
-  `DMI_SerialNumer` varchar(20) DEFAULT NULL,
+  `DMI_SerialNumber` varchar(20) DEFAULT NULL,
   `DMI_OEMString` varchar(100) DEFAULT NULL,
   `TestItem` varchar(10) DEFAULT NULL,
   `TestMachine` varchar(20) DEFAULT NULL,
