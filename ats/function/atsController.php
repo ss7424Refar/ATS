@@ -19,9 +19,13 @@ if(!empty($action)){
             $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
             $atsTask->getAtsTaskInfoByTaskId($taskID);
             break;
-        case 'getAtsInfoByMultiTaskId':
+        case 'checkAtsInfoByMultiTaskId':
             $multiTask=isset($_GET['multiTask']) ? $_GET['multiTask'] : 0;
-            $atsTask->getAtsTaskInfoByMultiTaskId($multiTask);
+            $atsTask->checkAtsInfoByMultiTaskId($multiTask);
+            break;
+        case 'assignAtsInfoByMultiTaskId':
+            $multiTask=isset($_GET['multiTask']) ? $_GET['multiTask'] : 0;
+            $atsTask->assignAtsInfoByMultiTaskId($multiTask);
             break;
         case 'addTask':
             $atsTask->insertAtsTaskInfo(process4InitAddTaskForm());

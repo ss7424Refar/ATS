@@ -45,46 +45,45 @@ class atsTestTask{
 
     }
 
-    function getAtsTaskInfoByMultiTaskId($multiTask=null){
+    function checkAtsInfoByMultiTaskId($multiTask=null){
         $jsonResult = array();
 
         $pdoc = getPDOConnect();
 
-        // checkTaskId
+        // pdo
+        $sql="select * from $this->atsTaskInfoTable where TaskID=?";
+        $stmt = $pdoc->prepare($sql);
 
-        for ($i=0; $i<count($multiTask); $i++) {
-
-
-        }
-
-        $sql="select * from $this->atsTaskInfoTable where TaskID=$multiTask";
-        $conn = getDbConnect();
-
-        $result=mysqli_query($conn, $sql);
-
-        if($result){
-            // 返回记录数
-            $rowCount=mysqli_num_rows($result);
-            // 关联数组 one
-            $jsonResult['row']=mysqli_fetch_assoc($result);
-            // 释放结果集
-            mysqli_free_result($result);
-
-            if ($rowCount){
-                $jsonResult['flag'] = true;
-            } else {
-                $jsonResult['flag'] = false;
+        $saveNoTaskId = '';
+        $saveNotPending = '';
+        for ($i = 0; $i < count($multiTask); $i++) {
+            if($stmt->execute(array($multiTask[$i]['TaskID']))){
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                // checkTaskId
+                if (!$row) {
+                    $saveNoTaskId = $saveNoTaskId . $multiTask[$i]['TaskID']. ',';
+                }else{
+                    // pending check
+                    if (0 != $row['TaskStatus']){
+                        $saveNotPending = $saveNotPending. $multiTask[$i]['TaskID']. ',';
+                    }
+                }
             }
-
-        } else {
-            $jsonResult['flag'] = false;
         }
 
-        //close
-        mysqli_close($conn);
+        $jsonResult['NoTaskIdFlag'] = empty($saveNoTaskId) ? false : true;
+        $jsonResult['saveNoTaskId'] = !empty($saveNoTaskId) ? substr($saveNoTaskId, 0 , strlen($saveNoTaskId) - 1) : '';
+        $jsonResult['NotPendingFlag'] = empty($saveNotPending) ? false : true;
+        $jsonResult['saveNotPending'] = !empty($saveNotPending) ? substr($saveNotPending, 0 , strlen($saveNoTaskId) - 1) : '';
+
         echo json_encode($jsonResult);
+    }
+
+    function assignAtsInfoByMultiTaskId($multiTask=null){
+
 
     }
+
     function insertAtsTaskInfo($addTaskFormData){
 
         $user = isset($_SESSION['user']) ? $_SESSION['user'] : '';

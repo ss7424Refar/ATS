@@ -692,7 +692,7 @@ $_SESSION['user']='daring';
                     console.log(taskId);
                     $.ajax({
                         type: "get",
-                        url: "function/atsController.php?do=checkTaskId&" + "taskID=" + taskId,
+                        url: "function/atsController.php?do=getAtsInfoByTaskId&" + "taskID=" + taskId,
                         dataType: "json",
                         success: function (result) {
                             console.log(result.flag);
@@ -765,26 +765,45 @@ $_SESSION['user']='daring';
                 } else if(ckArr.length >= 1 && ckArr.length<= 5){
                     $.ajax({
                         type: "get",
-                        url: "function/atsController.php?do=getAtsInfoByMultiTaskId",
+                        url: "function/atsController.php?do=checkAtsInfoByMultiTaskId",
                         data: {multiTask: ckArr},
+                        dataType: 'json',
                         success: function (result) {
-                            console.log(result.flag);
-                            if(result.flag){
-                                $("#dmiInfo").find('p:eq(0)').html(result.row['TaskID']);
-                                $("#dmiInfo").find('p:eq(1)').html(result.row['DMI_SerialNumber']);
-                                $("#dmiInfo").find('p:eq(2)').html(result.row['DMI_PartNumber']);
-                                $("#dmiInfo").find('p:eq(3)').html(result.row['DMI_OEMString']);
-                                $("#dmiInfo").modal("toggle");
-                            } else{
-                                // toastr.info("TaskID = " + taskId + " didn't found! Please Refresh Table!");
+                            console.log(result.NoTaskIdFlag);
+                            console.log(result.NotPendingFlag);
+
+                            if (result.NoTaskIdFlag){
+                                toastr.info("TaskID = " + result.saveNoTaskId + " didn't found! Please Refresh Table!");
+                                return;
                             }
+                            if (result.NotPendingFlag) {
+                                toastr.info("TaskID = " + result.saveNotPending + " not pending! cannnot assign to ATS");
+                                return;
+                            }
+                            toastr.success("success assign to ATS");
+                            // assign to ATS
+                            $.ajax({
+                                type: "get",
+                                url: "function/atsController.php?do=assignAtsInfoByMultiTaskId",
+                                data: {multiTask: ckArr},
+                                dataType: 'json',
+                                success: function (result) {
+
+                                }
+                                
+                            });
+
+
+
+
                         },
                         error:function (xhr,status,error) {
                             toastr.error(xhr.status + " " + xhr.statusText);
                         }
                     });
 
-
+                } else {
+                    toastr.warning("Please select less then five checkbox");
                 }
 
             });
@@ -927,7 +946,7 @@ $_SESSION['user']='daring';
                 </div>
             </div>
         <hr>
-        <div class="alert alert-info" id="fineInfo" style="display: none">
+        <div class="alert alert-warning" id="fineInfo" style="display: none">
             <a href="#" class="close" data-dismiss="alert">
                 &times;
             </a>
@@ -1188,7 +1207,7 @@ $_SESSION['user']='daring';
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">close</button>
                     </div>
                 </div>
             </div>
