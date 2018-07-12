@@ -8,10 +8,12 @@
 session_start();
 
 require_once 'dbConnect.php';
+require_once '../ats_config.inc.php';
 
 class atsTestTask{
 
     private $atsTaskInfoTable="ats_testtask_info";
+    private $atsScheduleInfoTable="ats_schedule_info";
 
     function getAtsTaskInfoByTaskId($taskId=null){
         $jsonResult = array();
@@ -77,11 +79,48 @@ class atsTestTask{
         $jsonResult['saveNotPending'] = !empty($saveNotPending) ? substr($saveNotPending, 0 , strlen($saveNoTaskId) - 1) : '';
 
         echo json_encode($jsonResult);
+        $pdoc = null;
     }
 
     function assignAtsInfoByMultiTaskId($multiTask=null){
+        // pdo
+        $pdoc = getPDOConnect();
 
+//        $sql4Schedule="insert into  $this->atsScheduleInfoTable select * from  $this->atsTaskInfoTable where TaskID=?";
+        $sql4TestTask="update $this->atsTaskInfoTable  set TaskStatus = '1', TestStartTime = now() where TaskID=?";
+        $sql4SelectTask="select * from $this->atsTaskInfoTable where TaskID=?";
 
+        // extract
+        $stmt = $pdoc->prepare($sql4SelectTask);
+        for ($i = 0; $i < count($multiTask); $i++) {
+            $stmt->execute(array($multiTask[$i]['TaskID']));
+            if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $filePath = ATS_TMP_TASKS_PATH;
+                $fileName = ATS_TMP_TASKS_HEADER. $row['ShelfID']. ATS_FILE_UNDERLINE. $row['LANID'].
+                    ATS_FILE_UNDERLINE. $multiTask[$i]['TaskID']. ATS_FILE_suffix;
+                $fileCreate = $filePath. $fileName;
+                $file = fopen($fileCreate,"x");
+                foreach ($row as $key=>$value){
+                    if(null == $value){
+                        $value='NULL';
+                    }
+                    $str = $key. '='. $value.PHP_EOL;
+                    file_put_contents($fileCreate, $str,FILE_APPEND);
+                }
+                fclose($file);
+
+                if(!copy($fileCreate, ATS_TASKS_PATH. $fileName) || !unlink($fileCreate)){
+                    echo json_encode($multiTask[$i]['TaskID']. " copy or delete fail");
+                    exit();
+                } else {
+                    // update
+                    $stmtUpdate = $pdoc->prepare($sql4TestTask);
+                    $stmtUpdate->bindParam(1, $multiTask[$i]['TaskID']);
+                    $stmtUpdate->execute();
+                }
+            }
+        }
+        echo json_encode("done");
     }
 
     function insertAtsTaskInfo($addTaskFormData){
@@ -110,7 +149,5 @@ class atsTestTask{
 
 
     }
-
-
 
 }

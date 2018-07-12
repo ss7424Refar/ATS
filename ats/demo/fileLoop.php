@@ -6,12 +6,10 @@
  * Time: 2:06 PM
  */
 
-//$path = '\\\\192.168.1.190\\ssh';
-//$path='/home/refar';
-$path='D:\download';
+require_once '../ats_config.inc.php';
 
 $query = isset($_GET['q']) ? $_GET['q'] : '';
-$handler = opendir($path);
+$handler = opendir(ATS_IMAGES_PATH);
 
 $i = 1;
 $jsonResult = array();

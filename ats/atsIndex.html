@@ -388,12 +388,12 @@ $_SESSION['user']='daring';
                                 message: 'The testImage is required and can\'t be empty'
                             },
                             callback: {
-                                message: 'The testImage must be more than 5 and less than 20 characters long',
+                                message: 'The testImage must be more than 4 and less than 20 characters long',
                                 callback: function (value, validator) {
                                     var testImage = $("select[name='testImage']:eq(1)").select2('data')[0].text;
                                     console.log('get_' + value);
                                     console.log('get_' + testImage);
-                                    if(testImage.length >= 5 && testImage.length <= 20){
+                                    if(testImage.length >= 4 && testImage.length <= 20){
                                         return true;
                                     }
                                     return false;
@@ -658,7 +658,7 @@ $_SESSION['user']='daring';
                         } else if("pass"==value){
                             return '<a target="_blank" href=file://' + row.TestResultPath + '><i class="fas fa-check fa-fw"></i>&nbsp;' + value + '</a>';
                         }
-                        return 'not ready';
+                        return "N/A";
                         // return "<a href=" +  + "></a>";
                     }
                 }
@@ -780,7 +780,7 @@ $_SESSION['user']='daring';
                                 toastr.info("TaskID = " + result.saveNotPending + " not pending! cannnot assign to ATS");
                                 return;
                             }
-                            toastr.success("success assign to ATS");
+
                             // assign to ATS
                             $.ajax({
                                 type: "get",
@@ -788,26 +788,27 @@ $_SESSION['user']='daring';
                                 data: {multiTask: ckArr},
                                 dataType: 'json',
                                 success: function (result) {
-
+                                    if("done" == result){
+                                        toastr.success("success assign to ATS");
+                                        $('#taskTable').bootstrapTable('selectPage', 1);
+                                    } else {
+                                        toastr.error(result);
+                                    }
+                                },
+                                error: function () {
+                                    toastr.error("fail assign to ATS");
                                 }
-                                
                             });
-
-
-
-
                         },
                         error:function (xhr,status,error) {
                             toastr.error(xhr.status + " " + xhr.statusText);
                         }
                     });
-
                 } else {
                     toastr.warning("Please select less then five checkbox");
                 }
 
             });
-
         }
 
 

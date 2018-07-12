@@ -6,6 +6,7 @@
  * Time: 上午8:06
  */
 
+require_once 'dbConnect.php';
 $pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 10;
 $pageNo = isset($_GET['pageNumber']) ? $_GET['pageNumber'] : 1;
 $taskIdSingle = isset($_GET['taskId']) ? $_GET['taskId'] : '';
@@ -14,18 +15,8 @@ $offset = ($pageNo-1)*$pageSize;
 //$pageSize = 10;
 //$pageNo = 2;
 // ------------------DB connect ----------------------
-$host = "localhost";
-$username = "root";
-$password = "123456";
-$database = "tpms";
-$port = "3306";
 
-$conn = mysqli_connect($host, $username, $password, $database, $port);
-
-if (!$conn) {
-    die('could not connect'. mysqli_connect_error());
-}
-mysqli_set_charset($conn,"utf8");
+$conn = getDbConnect();
 
 // ------------------DB connect ----------------------
 

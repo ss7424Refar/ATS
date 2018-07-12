@@ -6,9 +6,9 @@
  * Time: 下午4:25
  */
 
-$path='../resource/TestPC.csv';
+require_once '../ats_config.inc.php';
 
-$file = fopen($path,'r');
+$file = fopen(ATS_PREPARE_PATH. ATS_PREPARE_FILE. ATS_FILE_suffix,'r');
 $query = isset($_GET['q']) ? $_GET['q'] : '';
 
 $jsonResult=array();

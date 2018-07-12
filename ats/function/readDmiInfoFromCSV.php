@@ -6,8 +6,8 @@
  * Time: 上午9:13
  */
 
-$path='../resource/TestPC.csv';
-$file = fopen($path,'r');
+require_once '../ats_config.inc.php';
+$file = fopen(ATS_PREPARE_PATH. ATS_PREPARE_FILE. ATS_FILE_suffix,'r');
 
 $machineId=isset($_GET['machineId']) ? $_GET['machineId'] : '';
 
