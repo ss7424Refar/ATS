@@ -51,7 +51,6 @@ class atsTestTask{
         $jsonResult = array();
 
         $pdoc = getPDOConnect();
-
         // pdo
         $sql="select * from $this->atsTaskInfoTable where TaskID=?";
         $stmt = $pdoc->prepare($sql);
