@@ -795,6 +795,7 @@ $_SESSION['user']='daring';
                                         toastr.error(result);
                                     }
                                 },
+
                                 error: function () {
                                     toastr.error("fail assign to ATS");
                                 }
