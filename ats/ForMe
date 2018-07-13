@@ -35,3 +35,6 @@ TestPC.csv是直接获取机子的dmi信息。tpms则需要根据用户是否修
 1: 需要重新查看查询表的sql。因为要排序 (可能需要优化)
 4: 改善200 Ok
 5: 改善checkbox的双击
+6:两个select2的组件，取值为id， text。所以不能用过bs validator的callback做check。有点改进。
+  -- 可能改善不了了。哎。换成value也不行。stringlength也不行。
+9：有待更新function/getAtsTaskInfo.php

@@ -28,5 +28,5 @@ define('ATS_PREPARE_FILE', 'TestPC');
 define('ATS_TMP_TASKS_PATH', 'D:/wnmp/www/ATS/ats/resource/tmp/');
 define('ATS_TMP_TASKS_HEADER', 'Task'. ATS_FILE_UNDERLINE);
 define('ATS_TASKS_PATH', 'D:/wnmp/www/ATS/ats/resource/tasks/');
-define('ATS_FINISH_PATH', 'root');
+define('ATS_FINISH_PATH', 'D:/wnmp/www/ATS/ats/resource/finish/');
 

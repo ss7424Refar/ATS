@@ -7,7 +7,7 @@
  */
 session_start();
 
-require_once 'dbConnect.php';
+require_once 'atsDbConnect.php';
 require_once '../ats_config.inc.php';
 
 class atsTestTask{
@@ -15,6 +15,86 @@ class atsTestTask{
     private $atsTaskInfoTable="ats_testtask_info";
     private $atsScheduleInfoTable="ats_schedule_info";
 
+    function readTestPCInfo(){
+        $file = fopen(ATS_PREPARE_PATH. ATS_PREPARE_FILE. ATS_FILE_suffix,'r');
+
+        $machineId=isset($_GET['machineId']) ? $_GET['machineId'] : '';
+
+        $jsonResult=array();
+        $line=0;
+
+        if(!empty($machineId)){
+            while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
+                $line++;
+                if ($line>=2){
+                    if ($data[2] == $machineId){
+                        $tmpArray = array('product'=> $data[6], 'sn' => $data[7], 'pn' => $data[8], 'oem' => $data[9], 'sys'=> $data[10], 'lanIp' => $data[3], 'shelfId' => $data[0]);
+                        array_push($jsonResult, $tmpArray);
+                    }
+                }
+
+            }
+
+        }
+        echo json_encode($jsonResult);
+    }
+
+    function readMachine4Select2(){
+        $file = fopen(ATS_PREPARE_PATH. ATS_PREPARE_FILE. ATS_FILE_suffix,'r');
+        $query = isset($_GET['q']) ? $_GET['q'] : '';
+
+        $jsonResult=array();
+        $line=0;
+        while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
+            $line++;
+            if ($line>=2){
+                $machineId=$data[2];
+                $appendedTestMachine=$data[1]. "(". $data[2]. ")" ;
+                if (empty(trim($query))) {
+                    $tmpArray = array('id' => $data[1], 'text' => $appendedTestMachine);
+                    array_push($jsonResult, $tmpArray);
+                }else {
+                    if (stristr($appendedTestMachine, $query) !== false){
+                        $tmpArray = array('id' => $data[1], 'text' => $appendedTestMachine);
+                        array_push($jsonResult, $tmpArray);
+                    }
+
+                }
+
+            }
+
+        }
+        echo json_encode($jsonResult);
+
+        fclose($file);
+    }
+
+    function getImageName4Select2(){
+        $query = isset($_GET['q']) ? $_GET['q'] : '';
+        $handler = opendir(ATS_IMAGES_PATH);
+
+        $i = 1;
+        $jsonResult = array();
+
+        while (($filename = readdir($handler)) !== false) {
+            //略过linux目录的名字为'.'和‘..'的文件
+            if ($filename != "." && $filename != "..") {
+                if (empty(trim($query))) {
+                    $tmpArray = array('id' => $filename, 'text' => $filename);
+                    $i = $i + 1;
+                    array_push($jsonResult, $tmpArray);
+                } else {
+                    if (stristr($filename, $query) !== false) {
+                        $tmpArray = array('id' => $filename, 'text' => $filename);
+                        $i = $i + 1;
+                        array_push($jsonResult, $tmpArray);
+                    }
+                }
+            }
+        }
+
+        echo json_encode($jsonResult);
+    }
     function getAtsTaskInfoByTaskId($taskId=null){
         $jsonResult = array();
 
@@ -125,17 +205,16 @@ class atsTestTask{
     function insertAtsTaskInfo($addTaskFormData){
 
         $user = isset($_SESSION['user']) ? $_SESSION['user'] : '';
-        $powId = explode("_",$addTaskFormData['shelf'])[1];
-        $lanId = $powId;
+        $switchId = explode("_",$addTaskFormData['shelf'])[1];
         $shelfId = explode("_",$addTaskFormData['shelf'])[0];
 
-        $columns = "`TaskID`, `TestImage`, `DMIModifyFlag`, `DMI_PartNumber`, `DMI_SerialNumber`, ".
-            "`DMI_OEMString`, `TestItem`, `TestMachine`, `MachineID`, `PowerID`, `LANID`, `LANIP`, ".
+        $columns = "`TaskID`, `TestImage`, `DMIModifyFlag`, `DMI_PartNumber`, `DMI_SerialNumber`, `DMI_ProductName`,".
+            "`DMI_OEMString`, `DMI_SystemConfig`, `TestItem`, `TestMachine`, `MachineID`, `LANIP`, `SwitchId`, ".
             "`ShelfID`, `TestResult`, `TestResultPath`, `TestStartTime`, `TestEndTime`, `TaskStatus`, `Tester`";
         $sql = "insert into $this->atsTaskInfoTable ($columns)".
                 " values (NULL, '{$addTaskFormData['testImage']}', '{$addTaskFormData['customer']}', '{$addTaskFormData['addPN']}',".
-                "'{$addTaskFormData['addSN']}', '{$addTaskFormData['addOem']}', '{$addTaskFormData['testItem']}', '{$addTaskFormData['testMachine']}', ".
-                "'{$addTaskFormData['machineId']}', '{$powId}', '{$lanId}', '{$addTaskFormData['lanIp']}', '{$shelfId}', NULL,  NULL, NULL, NULL, '0', '{$user}')";
+                " '{$addTaskFormData['addSN']}', '{$addTaskFormData['product']}', '{$addTaskFormData['addOem']}',  '{$addTaskFormData['addSystem']}', '{$addTaskFormData['testItem']}', '{$addTaskFormData['testMachine']}', ".
+                "'{$addTaskFormData['machineId']}', '{$addTaskFormData['lanIp']}', '{$switchId}', '{$shelfId}',  NULL,  NULL, NULL, NULL, '0', '{$user}')";
 
         $conn = getDbConnect();
 
@@ -145,8 +224,5 @@ class atsTestTask{
         } else {
             echo "error". "<br>". $sql;
         }
-
-
     }
-
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="../third_party/bootstrap-3.3.7-dist/js/jquery-3.1.1.min.js"></script>
+    <script>
+
+            tmp = 'hello';
+
+            $(function () {
+                tmp2 = 'hello';
+                console.log($('#hello').val());
+                odiv = $('#hello');
+                init();
+            });
+
+            function init(){
+                odiv.html(tmp2);
+            }
+    </script>
+</head>
+<body>
+    <div id="hello"></div>
+</body>
+</html>

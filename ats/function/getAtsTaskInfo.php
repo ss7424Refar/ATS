@@ -6,7 +6,7 @@
  * Time: 上午8:06
  */
 
-require_once 'dbConnect.php';
+require_once 'atsDbConnect.php';
 $pageSize = isset($_GET['pageSize']) ? $_GET['pageSize'] : 10;
 $pageNo = isset($_GET['pageNumber']) ? $_GET['pageNumber'] : 1;
 $taskIdSingle = isset($_GET['taskId']) ? $_GET['taskId'] : '';
@@ -14,11 +14,8 @@ $offset = ($pageNo-1)*$pageSize;
 
 //$pageSize = 10;
 //$pageNo = 2;
-// ------------------DB connect ----------------------
 
 $conn = getDbConnect();
-
-// ------------------DB connect ----------------------
 
 // ------------------get_ats_testtask_info_Count & Info-------
 

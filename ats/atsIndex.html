@@ -71,9 +71,34 @@ $_SESSION['user']='daring';
     <script>
 
         $(function () {
+            // ----------------------- dataInit -----------------------
+            testImage = $("select[name='testImage']");
+            testMachine = $("select[name='testMachine']");
+            addMachine = $("select[name='testMachine']:eq(0)");
+            addTestImage = $("select[name='testImage']:eq(1)");
 
+            pDmiInfo = $('div[data-topic="pDmiInfo"]');
+            pDmiInfo_product = $('div[data-topic="pDmiInfo"] p:eq(0)');
+            pDmiInfo_sn = $('div[data-topic="pDmiInfo"] p:eq(1)');
+            pDmiInfo_pn = $('div[data-topic="pDmiInfo"] p:eq(2)');
+            pDmiInfo_oem = $('div[data-topic="pDmiInfo"] p:eq(3)');
+            pDmiInfo_sys = $('div[data-topic="pDmiInfo"] p:eq(4)');
+            pDmiInfo_lanIp = $('div[data-topic="pDmiInfo"] p:eq(5)');
+            pDmiInfo_shelfId = $('div[data-topic="pDmiInfo"] p:eq(6)');
+
+            inputDmiInfo = $('div[data-topic="inputDmiInfo"]');
+            inputDmiInfo_lanIp = $('div[data-topic="inputDmiInfo"] p:eq(0)');
+            inputDmiInfo_shelfId = $('div[data-topic="inputDmiInfo"] p:eq(1)');
+
+            addCK = $('input[name="customer"]');
+            addDefaultCK = $('input[name="customer"]:eq(0)');
+            addCustomerCK = $('input[name="customer"]:eq(1)');
+
+            // ----------------------- dataInit -----------------------
+
+            <!-- Tooltip-->
             toolTipInit();
-
+            <!--    popover-->
             popoverInit();
 
             // searchDetail
@@ -118,18 +143,17 @@ $_SESSION['user']='daring';
             // init addModal
             $('#addModal').on('show.bs.modal', function () {
                 alert(6);
-                $('input[name="customer"]:eq(0)').prop('checked', 'true');
-                $("select[name='testMachine']:eq(0)").val(null).trigger('change');
-                $("select[name='testImage']:eq(1)").val(null).trigger('change');
-                $('div[data-topic="pDmiInfo"]').css('display', 'none');
-                $('div[data-topic="inputDmiInfo"]').css('display', 'none');
+                addDefaultCK.prop('checked', 'true');
+                addMachine.val(null).trigger('change');
+                addTestImage.val(null).trigger('change');
+                pDmiInfo.css('display', 'none');
+                inputDmiInfo.css('display', 'none');
                 $('#addTaskForm').data('bootstrapValidator').destroy();
                 addFormValidatorInit();
             });
 
             //advise
-            $("#fineInfo").fadeIn();
-            $("#fineInfo").fadeOut(7000);
+            $("#fineInfo").fadeIn().fadeOut(7000);
 
             //task button
             assignButtonInit();
@@ -213,11 +237,11 @@ $_SESSION['user']='daring';
         };
 
         function  select2Init() {
-            var testImage = $("select[name='testImage']");
             testImage.select2({
                     width: "100%",
                     ajax: {
-                        url: 'demo/fileLoop.php',
+                        // url: 'demo/fileLoop.php',
+                        url: "function/atsController.php?do=getImageName4Select2",
                         dataType: 'json',
                         delay: 250,
                         data: function (params) {
@@ -232,16 +256,16 @@ $_SESSION['user']='daring';
                         },
                         cache: false
                     },
-                placeholder:'please select',
-                allowClear:true
+                    placeholder: 'please select',
+                    allowClear: true
                 }
             );
 
-            var testMachine = $("select[name='testMachine']");
             testMachine.select2({
                 width: "100%",
                 ajax: {
-                    url: 'function/readAddData.php',
+                    // url: 'function/readAddData.php',
+                    url: "function/atsController.php?do=readMachine4Select2",
                     dataType: 'json',
                     delay: 250,
                     data: function (params) {
@@ -260,26 +284,34 @@ $_SESSION['user']='daring';
                 allowClear:true
             });
 
-            var addMachine = $("select[name='testMachine']:eq(0)");
+
             addMachine.on("select2:select",function(e){
                 console.log(addMachine.val());
-                var machineId = addMachine.val();
+                var addMachineVal = addMachine.val();
+                var machineId = addMachine.select2('data')[0].text;
+                if (null != machineId) {
+                    machineId = machineId.replace(addMachineVal, '');
+                    machineId = machineId.substring(1, machineId.length - 1);
+                }
+                console.log(machineId);
                 // var data = e.params.data;
                 // console.log(data.text);
-                if ($('input[name="customer"]:eq(0)').prop('checked')){
+                if (addDefaultCK.prop('checked')){
                     $.ajax({
                         type: 'get',
-                        url: 'function/readDmiInfoFromCSV.php',
+                        // url: 'function/readDmiInfoFromCSV.php',
+                        url: "function/atsController.php?do=readTestPCInfo",
                         data: {machineId: machineId},
                         dataType: 'json',
                         success: function(result){
-                            $('div[data-topic="pDmiInfo"]').css('display', 'block');
-                            $('div[data-topic="pDmiInfo"] p:eq(0)').html(result[0].pn);
-                            $('div[data-topic="pDmiInfo"] p:eq(1)').html(result[0].sn);
-                            $('div[data-topic="pDmiInfo"] p:eq(2)').html(result[0].oem);
-                            $('div[data-topic="pDmiInfo"] p:eq(3)').html(result[0].lanIp);
-                            $('div[data-topic="pDmiInfo"] p:eq(4)').html(result[0].shelfId);
-
+                            pDmiInfo.css('display', 'block');
+                            pDmiInfo_product.html(result[0].product);
+                            pDmiInfo_sn.html(result[0].sn);
+                            pDmiInfo_pn.html(result[0].pn);
+                            pDmiInfo_oem.html(result[0].oem);
+                            pDmiInfo_sys.html(result[0].sys);
+                            pDmiInfo_lanIp.html(result[0].lanIp);
+                            pDmiInfo_shelfId.html(result[0].shelfId);
                         },
                         error: function () {
                             toastr.error("Dmi Read Failed");
@@ -289,13 +321,13 @@ $_SESSION['user']='daring';
                 } else {
                     $.ajax({
                         type: 'get',
-                        url: 'function/readDmiInfoFromCSV.php',
+                        // url: 'function/readDmiInfoFromCSV.php',
+                        url: "function/atsController.php?do=readTestPCInfo",
                         data: {machineId: machineId},
                         dataType: 'json',
                         success: function(result){
-                            $('div[data-topic="inputDmiInfo"] p:eq(0)').html(result[0].lanIp);
-                            $('div[data-topic="inputDmiInfo"] p:eq(1)').html(result[0].shelfId);
-
+                            inputDmiInfo_lanIp.html(result[0].lanIp);
+                            inputDmiInfo_shelfId.html(result[0].shelfId);
                         },
                         error: function () {
                             toastr.error("Dmi Read Failed");
@@ -307,23 +339,20 @@ $_SESSION['user']='daring';
                 }
             }).on("select2:clear", function (e) {
                 alert(4);
-                if ($('input[name="customer"]:eq(0)').prop('checked')){
-                    $('div[data-topic="pDmiInfo"]').css('display', 'none').find('p').html('');
+                if (addDefaultCK.prop('checked')){
+                    pDmiInfo.css('display', 'none').find('p').html('');
                 } else {
-                    $('div[data-topic="inputDmiInfo"]').find('p').html('N/A');
+                    inputDmiInfo.find('p').html('N/A');
                 }
             });
 
         };
 
         function addCheckBoxInit() {
+            // var cstCh = $('input[name="customer"]');
+            // var addMachine = $("select[name='testMachine']:eq(0)");
 
-            var pDmi = $('div[data-topic="pDmiInfo"]');
-            var inputDmi = $('div[data-topic="inputDmiInfo"]');
-            var cstCh = $('input[name="customer"]');
-            var addMachine = $("select[name='testMachine']:eq(0)");
-
-            cstCh.change(function () {
+            addCK.change(function () {
 
                 $('#addTaskForm').data('bootstrapValidator').destroy();
 
@@ -332,20 +361,19 @@ $_SESSION['user']='daring';
 
                 if ("customer" === vadio) {
                     alert(1);
-                    pDmi.css('display', 'none');
-                    inputDmi.css('display', 'block');
+                    pDmiInfo.css('display', 'none');
+                    inputDmiInfo.css('display', 'block');
 
                     addMachine.val(null).trigger('change');
-                    inputDmi.find('input').val('');
-                    inputDmi.find('p').html('N/A');
+                    inputDmiInfo.find('input').val('');
+                    inputDmiInfo.find('p').html('N/A');
                 } else if("default" === vadio) {
                     alert(2);
                     addMachine.val(null).trigger('change');
-                    inputDmi.css('display', 'none');
-                    pDmi.css('display', 'none');
+                    inputDmiInfo.css('display', 'none');
+                    pDmiInfo.css('display', 'none');
                 }
                 addFormValidatorInit();
-
             });
         };
 
@@ -363,22 +391,30 @@ $_SESSION['user']='daring';
                         validators: {
                             notEmpty: {
                                 message: 'The testMachine is required and can\'t be empty'
-                            },
-                            callback: {
-                                message: 'The testMachine(except machineId) must be more than 5 and less than 20 characters long',
-                                callback: function (value, validator) {
-                                    var testMachine = $("select[name='testMachine']:eq(0)").select2('data')[0].text;
-                                    if (null != testMachine){
-                                        testMachine =  testMachine.replace(value, '').replace('()','');
-                                    }
-                                    console.log('get_' + value);
-                                    console.log('get_' + testMachine);
-                                    if(testMachine.length >= 5 && testMachine.length <= 20){
-                                        return true;
-                                    }
-                                    return false;
-                                }
                             }
+                            // ,stringLength: {
+                            //     min: 5,
+                            //     max: 20,
+                            //     message: 'The testMachine(except machineId) must be more than 5 and less than 20 characters long'
+                            // }
+                            // ,
+                            // callback: {
+                            //     message: 'The testMachine(except machineId) must be more than 5 and less than 20 characters long',
+                            //     callback: function (value, validator, $field) {
+                            //         console.log(addMachine.select2('data'));
+                            //         console.log(addMachine.select2('data').text);
+                            //         var testMachine = addMachine.select2('data')[0].text;
+                            //         if (null != testMachine){
+                            //             testMachine =  testMachine.replace(value, '').replace('()','');
+                            //         }
+                            //         console.log('get_' + value);
+                            //         console.log('get_' + testMachine);
+                            //         if(testMachine.length >= 5 && testMachine.length <= 20){
+                            //             return true;
+                            //         }
+                            //         return false;
+                            //     }
+                            // }
                         }
                     },
                     testImage: {
@@ -386,19 +422,43 @@ $_SESSION['user']='daring';
                         validators: {
                             notEmpty: {
                                 message: 'The testImage is required and can\'t be empty'
-                            },
-                            callback: {
-                                message: 'The testImage must be more than 4 and less than 20 characters long',
-                                callback: function (value, validator) {
-                                    var testImage = $("select[name='testImage']:eq(1)").select2('data')[0].text;
-                                    console.log('get_' + value);
-                                    console.log('get_' + testImage);
-                                    if(testImage.length >= 4 && testImage.length <= 20){
-                                        return true;
-                                    }
-                                    return false;
-                                }
                             }
+                            // , stringLength: {
+                            //     min: 4,
+                            //     max: 20,
+                            //     message: 'The testImage must be more than 4 and less than 20 characters long'
+                            // }
+                            // ,
+                            // callback: {
+                            //     message: 'The testImage must be more than 4 and less than 20 characters long',
+                            //     callback: function (value, validator) {
+                            //         var testImage = addTestImage.select2('data')[0].text;
+                            //         console.log('get_' + value);
+                            //         console.log('get_' + testImage);
+                            //         if(testImage.length >= 4 && testImage.length <= 20){
+                            //             return true;
+                            //         }
+                            //         return false;
+                            //     }
+                            // }
+                        }
+                    },
+                    addProduct: {
+                        message: 'the Product Name is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The product name is required and can\'t be empty'
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 30,
+                                message: 'The product name must be more than 5 and less than 20 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
+                                message: 'The product name can only consist of special character like ~!@#$%^&*-/, , number, en.'
+                            }
+
                         }
                     },
                     addSN: {
@@ -414,8 +474,8 @@ $_SESSION['user']='daring';
                             },
                             regexp: {
                                 regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
-                                message: 'The oem can only consist of special character like ~!@#$%^&*-/, , number, en.'
-                            },
+                                message: 'The sn can only consist of special character like ~!@#$%^&*-/, , number, en.'
+                            }
 
                         }
                     },
@@ -427,13 +487,13 @@ $_SESSION['user']='daring';
                             },
                             stringLength: {
                                 min: 5,
-                                max: 20,
+                                max: 30,
                                 message: 'The pn must be more than 5 and less than 20 characters long'
                             },
                             regexp: {
                                 regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
-                                message: 'The oem can only consist of special character like ~!@#$%^&*-/, , number, en.'
-                            },
+                                message: 'The pn can only consist of special character like ~!@#$%^&*-/, , number, en.'
+                            }
 
                         }
                     },
@@ -453,7 +513,27 @@ $_SESSION['user']='daring';
                                 // regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
                                 regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
                                 message: 'The oem can only consist of special character like ~!@#$%^&*-/, , number, en.'
+                            }
+
+                        }
+                    },
+                    addSystem: {
+                        // enabled: false,
+                        message: 'the sytsem config is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: 'The sytsem config is required and can\'t be empty'
                             },
+                            stringLength: {
+                                min: 1,
+                                max: 20,
+                                message: 'The sytsem config must be more than 5 and less than 100 characters long'
+                            },
+                            regexp: {
+                                // regexp: /^[a-zA-Z0-9_\. \u4e00-\u9fa5 ]+$/,
+                                regexp: /^[a-zA-Z0-9_~!@#$%^&*-/,]+$/,
+                                message: 'The sytsem config can only consist of special character like ~!@#$%^&*-/, , number, en.'
+                            }
 
                         }
                     }
@@ -469,13 +549,20 @@ $_SESSION['user']='daring';
                 // Get the BootstrapValidator instance
                 var bv = $form.data('bootstrapValidator');
 
-                var testMachine = $("select[name='testMachine']:eq(0)").select2('data')[0].text;
+                var testMachine = addMachine.select2('data')[0].text;
                 var testItem = $('select[name="testItem"] option:selected').text();
-                var testImage = $("select[name='testImage']:eq(1)").select2('data')[0].text;
-                var machineId = $("select[name='testMachine']:eq(0)").select2('val');
+                var testImage = addTestImage.select2('data')[0].text;
+                // var machineId = addMachine.select2('val');
+
+                var addMachineVal = addMachine.val();
+                var machineId = addMachine.select2('data')[0].text;
+                if (null != machineId) {
+                    machineId = machineId.replace(addMachineVal, '');
+                    machineId = machineId.substring(1, machineId.length - 1);
+                }
 
                 // console.log(machineId);
-                if ($('input[name="customer"]:eq(0)').prop('checked')){
+                if (addDefaultCK.prop('checked')){
                     // Use Ajax to submit form data
                     $.ajax({
                         type : "get",
@@ -486,11 +573,13 @@ $_SESSION['user']='daring';
                             testItem: testItem,
                             testImage: testImage,
                             customer: 'default',
-                            addSN: $('div[data-topic="pDmiInfo"]').find('p:eq(0)').text(),
-                            addPN: $('div[data-topic="pDmiInfo"]').find('p:eq(1)').text(),
-                            addOem: $('div[data-topic="pDmiInfo"]').find('p:eq(2)').text(),
-                            lanIp: $('div[data-topic="pDmiInfo"]').find('p:eq(3)').text(),
-                            shelf: $('div[data-topic="pDmiInfo"]').find('p:eq(4)').text(),
+                            addProduct: pDmiInfo.find('p:eq(0)').text(),
+                            addSN: pDmiInfo.find('p:eq(1)').text(),
+                            addPN: pDmiInfo.find('p:eq(2)').text(),
+                            addOem:pDmiInfo.find('p:eq(3)').text(),
+                            addSystem: pDmiInfo.find('p:eq(4)').text(),
+                            lanIp: pDmiInfo.find('p:eq(5)').text(),
+                            shelf: pDmiInfo.find('p:eq(6)').text(),
                         },
                         success : function (result) {
                             console.log(result);
@@ -521,11 +610,13 @@ $_SESSION['user']='daring';
                             testItem: testItem,
                             testImage: testImage,
                             customer: 'customer',
-                            addSN: $('div[data-topic="inputDmiInfo"]').find('input:eq(0)').val(),
-                            addPN: $('div[data-topic="inputDmiInfo"]').find('input:eq(1)').val(),
-                            addOem: $('div[data-topic="inputDmiInfo"]').find('input:eq(2)').val(),
-                            lanIp: $('div[data-topic="inputDmiInfo"]').find('p:eq(0)').text(),
-                            shelf: $('div[data-topic="inputDmiInfo"]').find('p:eq(1)').text(),
+                            addProduct: inputDmiInfo.find('input:eq(0)').val(),
+                            addSN: inputDmiInfo.find('input:eq(1)').val(),
+                            addPN: inputDmiInfo.find('input:eq(2)').val(),
+                            addOem: inputDmiInfo.find('input:eq(3)').val(),
+                            addSystem: inputDmiInfo.find('input:eq(4)').val(),
+                            lanIp: inputDmiInfo.find('p:eq(0)').text(),
+                            shelf: inputDmiInfo.find('p:eq(1)').text(),
                         },
                         success : function (result) {
                             console.log(result);
@@ -546,9 +637,6 @@ $_SESSION['user']='daring';
                     });
 
                 }
-
-
-
             });
 
         };
@@ -566,8 +654,6 @@ $_SESSION['user']='daring';
 
             // toastr.options.progressBar = true;
         };
-
-
 
         function tableInit(queryPs){
             $('#taskTable').bootstrapTable({
@@ -698,9 +784,11 @@ $_SESSION['user']='daring';
                             console.log(result.flag);
                             if(result.flag){
                                 $("#dmiInfo").find('p:eq(0)').html(result.row['TaskID']);
-                                $("#dmiInfo").find('p:eq(1)').html(result.row['DMI_SerialNumber']);
-                                $("#dmiInfo").find('p:eq(2)').html(result.row['DMI_PartNumber']);
-                                $("#dmiInfo").find('p:eq(3)').html(result.row['DMI_OEMString']);
+                                $("#dmiInfo").find('p:eq(1)').html(result.row['DMI_ProductName']);
+                                $("#dmiInfo").find('p:eq(2)').html(result.row['DMI_SerialNumber']);
+                                $("#dmiInfo").find('p:eq(3)').html(result.row['DMI_PartNumber']);
+                                $("#dmiInfo").find('p:eq(4)').html(result.row['DMI_OEMString']);
+                                $("#dmiInfo").find('p:eq(5)').html(result.row['DMI_SystemConfig']);
                                 $("#dmiInfo").modal("toggle");
                             }
                             else{
@@ -788,25 +876,24 @@ $_SESSION['user']='daring';
                                 data: {multiTask: ckArr},
                                 dataType: 'json',
                                 success: function (result) {
-                                    if("done" == result){
+                                    if("done" === result){
                                         toastr.success("success assign to ATS");
                                         $('#taskTable').bootstrapTable('selectPage', 1);
                                     } else {
                                         toastr.error(result);
                                     }
                                 },
-
                                 error: function () {
                                     toastr.error("fail assign to ATS");
                                 }
                             });
                         },
-                        error:function (xhr,status,error) {
+                        error: function (xhr,status,error) {
                             toastr.error(xhr.status + " " + xhr.statusText);
                         }
                     });
                 } else {
-                    toastr.warning("Please select less then five checkbox");
+                    toastr.warning("Please select not more than five checkbox");
                 }
 
             });
@@ -1018,6 +1105,12 @@ $_SESSION['user']='daring';
                             </div>
                             <div style="display:none;" data-topic="pDmiInfo">
                                 <div class="form-group">
+                                    <label class="col-sm-3 control-label">Product Name</label>
+                                    <div class="col-sm-9">
+                                        <p class="form-control-static"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label">Serial Number</label>
                                     <div class="col-sm-9">
                                         <p class="form-control-static"></p>
@@ -1036,13 +1129,19 @@ $_SESSION['user']='daring';
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-sm-3 control-label">SystemConfig</label>
+                                    <div class="col-sm-9">
+                                        <p class="form-control-static"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label">LANIP</label>
                                     <div class="col-sm-3">
                                         <p class="form-control-static"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">ShelfID_LANID</label>
+                                    <label class="col-sm-3 control-label">ShelfID_SwitchID</label>
                                     <div class="col-sm-3">
                                         <p class="form-control-static"></p>
                                     </div>
@@ -1050,6 +1149,12 @@ $_SESSION['user']='daring';
 
                             </div>
                             <div style="display:none;" data-topic="inputDmiInfo">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Product Name</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="addProduct" >
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Serial Number</label>
                                     <div class="col-sm-9">
@@ -1069,13 +1174,19 @@ $_SESSION['user']='daring';
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-sm-3 control-label">SystemConfig</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="addSystem" >
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label">LANIP</label>
                                     <div class="col-sm-3">
                                         <p class="form-control-static"></p>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label">ShelfID_LANID</label>
+                                    <label class="col-sm-3 control-label">ShelfID_SwitchID</label>
                                     <div class="col-sm-3">
                                         <p class="form-control-static"></p>
                                     </div>
@@ -1188,6 +1299,12 @@ $_SESSION['user']='daring';
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3 control-label">Product Name</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static"></p>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-8">
                                     <p class="form-control-static"></p>
@@ -1201,6 +1318,12 @@ $_SESSION['user']='daring';
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">OEM String</label>
+                                <div class="col-sm-8">
+                                    <p class="form-control-static"></p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">System Config</label>
                                 <div class="col-sm-8">
                                     <p class="form-control-static"></p>
                                 </div>

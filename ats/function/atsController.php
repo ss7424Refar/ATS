@@ -15,6 +15,15 @@ if(!empty($action)){
     $atsTask = new atsTestTask;
 
     switch ($action){
+        case 'readTestPCInfo':
+            $atsTask->readTestPCInfo();
+            break;
+        case 'readMachine4Select2':
+            $atsTask->readMachine4Select2();
+            break;
+        case 'getImageName4Select2':
+            $atsTask->getImageName4Select2();
+            break;
         case 'getAtsInfoByTaskId':
             $taskID=isset($_GET['taskID']) ? $_GET['taskID'] : 0;
             $atsTask->getAtsTaskInfoByTaskId($taskID);
@@ -47,14 +56,16 @@ function process4InitAddTaskForm(){
     $testItem=isset($_GET['testItem']) ? $_GET['testItem'] : '';
     $testImage=isset($_GET['testImage']) ? $_GET['testImage'] : '';
     $customer=isset($_GET['customer']) ? ($_GET['customer'] =='default' ? 0 : 1) : '';
+    $addProduct=isset($_GET['addProduct']) ? $_GET['addProduct'] : '';
     $addSN=isset($_GET['addSN']) ? $_GET['addSN'] : '';
     $addPN=isset($_GET['addPN']) ? $_GET['addPN'] : '';
     $addOem=isset($_GET['addOem']) ? $_GET['addOem'] : '';
+    $addSystem=isset($_GET['addSystem']) ? $_GET['addSystem'] : '';
     $lanIp=isset($_GET['lanIp']) ? $_GET['lanIp'] : '';
     $shelf=isset($_GET['shelf']) ? $_GET['shelf'] : '';
 
-    $addFormArray = array('testMachine'=> $testMachine, 'machineId'=> $machineId, 'testItem'=> $testItem, 'testImage'=>$testImage, 'customer'=>$customer,
-        'addSN'=>$addSN, 'addPN'=>$addPN, 'addOem'=>$addOem, 'lanIp'=> $lanIp, 'shelf'=>$shelf);
+    $addFormArray = array('testMachine'=> $testMachine, 'machineId'=> $machineId, 'testItem'=> $testItem, 'testImage'=>$testImage, 'customer'=>$customer, 'product'=>$addProduct,
+        'addSN'=>$addSN, 'addPN'=>$addPN, 'addOem'=>$addOem, 'addSystem'=> $addSystem, 'lanIp'=> $lanIp, 'shelf'=>$shelf);
 
     return $addFormArray;
 }

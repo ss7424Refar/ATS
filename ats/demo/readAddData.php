@@ -13,7 +13,7 @@ $query = isset($_GET['q']) ? $_GET['q'] : '';
 
 $jsonResult=array();
 $line=0;
-while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
+    while ($data = fgetcsv($file)) { //每次读取CSV里面的一行内容
     $line++;
     if ($line>=2){
         $machineId=$data[2];
