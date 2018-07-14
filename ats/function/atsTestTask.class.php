@@ -175,16 +175,18 @@ class atsTestTask{
             $stmt->execute(array($multiTask[$i]['TaskID']));
             if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $filePath = ATS_TMP_TASKS_PATH;
-                $fileName = ATS_TMP_TASKS_HEADER. $row['ShelfID']. ATS_FILE_UNDERLINE. $row['LANID'].
+                $fileName = ATS_TMP_TASKS_HEADER. $row['ShelfID']. ATS_FILE_UNDERLINE. $row['SwitchId'].
                     ATS_FILE_UNDERLINE. $multiTask[$i]['TaskID']. ATS_FILE_suffix;
                 $fileCreate = $filePath. $fileName;
-                $file = fopen($fileCreate,"x");
+                $file = fopen($fileCreate,"x+");
                 foreach ($row as $key=>$value){
                     if(null == $value){
                         $value='NULL';
                     }
                     $str = $key. '='. $value.PHP_EOL;
                     file_put_contents($fileCreate, $str,FILE_APPEND);
+                    // unix
+                    chmod($fileCreate, 0777);
                 }
                 fclose($file);
 

@@ -6,49 +6,85 @@
  * Time: 9:05 AM
  */
 
-require_once '../function/dbConnect.php';
+require_once '../function/atsDbConnect.php';
 require_once '../ats_config.inc.php';
 
-//echo 'hello';
-$conn = getDbConnect();
-$sql4GetSystem = "select * from ats_system_config where name = 'FinishTimeStamp'";
-$sql4InsertSystem = "INSERT INTO `ats_system_config` (`name`, `value`) VALUES ('FinishTimeStamp', unix_timestamp());";
-$sql4UpdateSystem = "UPDATE ats_system_config` SET `value`='1531447322' WHERE `name`='FinishTimeStamp'";
+$handler = opendir(ATS_FINISH_PATH);
 
-//var_dump(time());
-$a = filectime('ats.sql');
+$pdoc = getPDOConnect();
+$sql4GetSystem = "select * from ats_system_config where name = ?";
+$sql4InsertSystem = "INSERT INTO `ats_system_config` (`name`, `value`) VALUES (?, unix_timestamp());";
+$sql4UpdateSystem = "UPDATE `ats_system_config` SET `value`=unix_timestamp() WHERE `name`=?";
+$sql4UpdateTask = "UPDATE `ats_testtask_info` SET `TestResult`=?, `TestResultPath`=?," .
+    " `TestEndTime`=?, `TaskStatus`=? WHERE `TaskID`=?";
 
-//echo "修改时间：".date("Y-m-d H:i:s",$a);
+$stmt = $pdoc->prepare($sql4GetSystem);
+$stmt->execute(array('FinishTimeStamp'));
 
-//echo time();
+$isUpdated = false;
 
-$result = mysqli_query($conn, $sql4GetSystem);
+if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-if (mysqli_num_rows($result) > 0){
-    $handler = opendir(ATS_FINISH_PATH);
-    // db
-    $saveTimeStamp = mysqli_fetch_array($result)[1];
+    $saveTimeStamp = $row['value'];
 
-    echo $saveTimeStamp. '<br>';
     while (($filename = readdir($handler)) !== false) {
         //略过linux目录的名字为'.'和‘..'的文件
         if ($filename != "." && $filename != "..") {
-            $fileTimeStamp = filectime($filename);
 
-            if ($fileTimeStamp - $saveTimeStamp > 0) {
+            $fileTimeStamp = filectime(ATS_FINISH_PATH . $filename);
 
+            if ($fileTimeStamp - $saveTimeStamp >= 0) {
+                $file = fopen(ATS_FINISH_PATH . $filename, 'r');
+                $tmpArray = array();
 
+                while ($data = fgetcsv($file, 0, '=')) {
 
+                    if ('TaskID' == $data[0]) {
+                        $tmpArray['taskId'] = $data[1];
+                    } else if ('TestResult' == $data[0]) {
+                        $tmpArray['TestResult'] = $data[1];
+                    } else if ('TestResultPath' == $data[0]) {
+                        $tmpArray['TestResultPath'] = $data[1];
+                    } else if ('TestEndTime' == $data[0]) {
+                        $tmpArray['TestEndTime'] = $data[1];
+                    } else if ('TaskStatus' == $data[0]) {
+                        $tmpArray['TaskStatus'] = $data[1];
+                    }
+
+                }
+                print_r($tmpArray);
+                if (!empty($tmpArray)) {
+                    $stmt = $pdoc->prepare($sql4UpdateTask);
+                    $stmt->bindParam(1, $tmpArray['TestResult'], PDO::PARAM_STR);
+                    $stmt->bindParam(2, $tmpArray['TestResultPath'], PDO::PARAM_STR);
+                    $stmt->bindParam(3, $tmpArray['TestEndTime'], PDO::PARAM_STR);
+                    $stmt->bindParam(4, $tmpArray['TaskStatus'], PDO::PARAM_STR);
+                    $stmt->bindParam(5, $tmpArray['taskId'], PDO::PARAM_INT);
+
+                    $stmt->execute();
+
+                    if ($stmt->rowCount() > 0) {
+                        if (!$isUpdated) {
+                            $isUpdated = true;
+                            $stmt = $pdoc->prepare($sql4UpdateSystem);
+                            $stmt->execute(array('FinishTimeStamp'));
+                            echo date("Y-m-d H:i:s", time()) . ' : ' . '[updated] atsSystemConfig' . PHP_EOL;
+                        }
+                    }
+                    echo date("Y-m-d H:i:s", time()) . ' : ' . $filename . ' [updated] taskDB result --> ' . $stmt->rowCount() . PHP_EOL;
+                }
 
             }
 
         }
+
     }
 
-
 } else {
-
-
+    $stmt = $pdoc->prepare($sql4InsertSystem);
+    $stmt->execute(array('FinishTimeStamp'));
+    echo date("Y-m-d H:i:s", time()) . ' : ' . '[insert] atsSystemConfig' . PHP_EOL;
 }
 
-
+//关闭连接
+$pdoc = null;
