@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="../third_party/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="../third_party/bootstrap-3.3.7-dist/js/jquery-3.1.1.min.js"></script>
+    <!-- 包括所有已编译的插件 -->
+    <script src="../third_party/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <!--fa-->
+    <link rel="stylesheet" href="../third_party/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">
+
+</head>
+<body>
+    <div class="container" >
+        <div class="row" style="margin-top: 10px">
+            <div class="alert alert-info" id="fineInfo" >
+                <!--<a href="#" class="close" data-dismiss="alert">-->
+                    <!--&times;-->
+                <!--</a>-->
+                <strong><i class="fa fa-hand-point-right fa-fw"></i>&nbsp;Info: </strong><i>&nbsp;You are checking Port Status.</i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6" style="height:350px;border-style: solid; border-width: 1px; border-color: #DDDDDD;overflow: scroll;">
+                <ul class="list-unstyled" id="list">
+                    <li><span class="text-warning"><i>ATS console detect log for TestPC</i></span></li>
+
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>machine</th>
+                            <th>machineId</th>
+                            <th>lanIp</th>
+                            <th>ssId</th>
+                        </tr>
+                    </thead>
+                    <tbody id="content">
+                        <tr><td colspan="5">
+                            <span class="text-warning">
+                                <i><i class="fa fa-spinner fa-pulse" style="color: #0A8CC6"></i> No data detect, Please wait 10s ...</i>
+                            </span>
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+
+<script>
+    $(function () {
+
+        WebSocketInit();
+
+    });
+
+    function WebSocketInit()
+    {
+        if ("WebSocket" in window)
+        {
+            // alert("您的浏览器支持 WebSocket!");
+
+            // 打开一个 web socket
+            var ws = new WebSocket("ws://ThinkPad:8080/");
+
+            ws.onopen = function()
+            {
+                // Web Socket 已连接上，使用 send() 方法发送数据
+                // ws.send("发送数据");
+                // alert("send data...");
+            };
+
+            ws.onmessage = function (evt)
+            {
+
+                // console.log(evt.data);
+                var response = evt.data;
+                if (null != response) {
+                    // response = response.substring(0,response.Length-1)
+                    // console.log(response);
+
+                    response = JSON.parse(response);
+                    console.log(response.message);
+                    // list
+                    $('#list').append('<li><span class="text-info small"><i>' + response.message + '</i></span></li>');
+
+                    // table
+                    console.log(response.result);
+                    var tableData = response.result;
+                    $('#content').empty();
+                    if (null != tableData){
+                        for (var i = 0; i < tableData.length; i++) {
+                            $('#content').append('<tr></tr>');
+                            $('#content tr:last').append('<td>' + tableData[i].id + '</td>');
+                            $('#content tr:last').append('<td>' + tableData[i].machine + '</td>');
+                            $('#content tr:last').append('<td>' + tableData[i].machineId + '</td>');
+                            $('#content tr:last').append('<td>' + tableData[i].LANIP + '</td>');
+                            $('#content tr:last').append('<td>' + tableData[i].ShelfId_SwitchId + '</td>');
+
+
+                        }
+                    }
+
+                }
+
+            };
+
+            ws.onclose = function()
+            {
+                // 关闭 websocket
+                alert("ws close...");
+            };
+        }
+
+        else
+        {
+            // 浏览器不支持 WebSocket
+            alert("your browse not support WebSocket!");
+        }
+    }
+</script>
+
+
+</body>
+</html>

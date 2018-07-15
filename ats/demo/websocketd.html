@@ -40,6 +40,7 @@
         }
         var ws = new WebSocket('ws://localhost:8080/');
         ws.onopen = function(evt) {
+            ws.send('hello');
             $('.list').append('<li>websocket连接成功</li>');
         }
         ws.onmessage = function(evt) {

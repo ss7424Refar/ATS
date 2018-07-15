@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="../third_party/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="../third_party/bootstrap-3.3.7-dist/js/jquery-3.1.1.min.js"></script>
+    <!-- 包括所有已编译的插件 -->
+    <script src="../third_party/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <!--fa-->
+    <link rel="stylesheet" href="../third_party/fontawesome-free-5.0.13/web-fonts-with-css/css/fontawesome-all.min.css">
+
+</head>
+<body>
+    <div class="container" >
+        <div class="row" style="margin-top: 10px">
+            <div class="alert alert-info" id="fineInfo" >
+                <a href="#" class="close" data-dismiss="alert">
+                    &times;
+                </a>
+                <strong><i class="fa fa-hand-point-right fa-fw"></i>&nbsp;Info: </strong><i>&nbsp;You are checking Port Status.</i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5" style="height:250px;border-style: solid; border-width: 1px; border-color: #DDDDDD;">
+                <ul class="list-unstyled" id="list">
+                    <li><span class="text-warning"><i>detect log for TestPC</i></span></li>
+
+                </ul>
+            </div>
+
+            <div class="col-md-7">
+                <table class="table table-responsive">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Firstname</th>
+                        <th>#</th>
+                        <th>Firstname</th>
+                        <th>Firstname</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Anna</td>
+                        <td>1</td>
+                        <td>Anna</td>
+                        <td>Anna</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Debbie</td>
+                        <td>2</td>
+                        <td>Debbie</td>
+                        <td>Debbie</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>John</td>
+                        <td>John</td>
+                        <td>3</td>
+                        <td>John</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+
+<script>
+    $(function () {
+
+        WebSocketInit();
+
+    });
+
+
+    function WebSocketInit()
+    {
+        if ("WebSocket" in window)
+        {
+            // alert("您的浏览器支持 WebSocket!");
+
+            // 打开一个 web socket
+            var ws = new WebSocket("ws://ThinkPad:8080/");
+
+            ws.onopen = function()
+            {
+                // Web Socket 已连接上，使用 send() 方法发送数据
+                ws.send("发送数据");
+                alert("数据发送中...");
+            };
+
+            ws.onmessage = function (evt)
+            {
+                alert("数据接受中中...");
+                console.log(evt.data);
+
+
+            };
+
+            ws.onclose = function()
+            {
+                // 关闭 websocket
+                // alert("连接已关闭...");
+            };
+        }
+
+        else
+        {
+            // 浏览器不支持 WebSocket
+            alert("您的浏览器不支持 WebSocket!");
+        }
+    }
+</script>
+
+
+</body>
+</html>

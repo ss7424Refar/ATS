@@ -31,8 +31,8 @@ if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         //略过linux目录的名字为'.'和‘..'的文件
         if ($filename != "." && $filename != "..") {
 
-            $fileTimeStamp = filectime(ATS_FINISH_PATH . $filename);
-
+            $fileTimeStamp = exec('stat -c %Y '. ATS_FINISH_PATH . $filename); // unix way
+//            $fileTimeStamp = filectime(ATS_FINISH_PATH . $filename);
             if ($fileTimeStamp - $saveTimeStamp >= 0) {
                 $file = fopen(ATS_FINISH_PATH . $filename, 'r');
                 $tmpArray = array();
@@ -52,6 +52,7 @@ if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     }
 
                 }
+                fclose($file);
                 print_r($tmpArray);
                 if (!empty($tmpArray)) {
                     $stmt = $pdoc->prepare($sql4UpdateTask);

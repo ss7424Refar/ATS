@@ -1,0 +1,45 @@
+nohup: 忽略输入
+Sat, 14 Jul 2018 19:40:02 +0800 | INFO   | server     |  | Serving using application   : ./count.sh 
+Sat, 14 Jul 2018 19:40:02 +0800 | INFO   | server     |  | Serving static content from : .
+Sat, 14 Jul 2018 19:40:02 +0800 | INFO   | server     |  | Starting WebSocket server   : ws://ThinkPad:8080/
+Sat, 14 Jul 2018 19:40:02 +0800 | INFO   | server     |  | Serving CGI or static files : http://ThinkPad:8080/
+Sat, 14 Jul 2018 19:40:07 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568407479682472' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sat, 14 Jul 2018 19:40:07 +0800 | ERROR  | stderr     | url:'http://localhost:8080/' id:'1531568407479682472' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5102' | tail: cannot open '/opt/log.txt' for reading: No such file or directory
+Sat, 14 Jul 2018 19:40:07 +0800 | ERROR  | stderr     | url:'http://localhost:8080/' id:'1531568407479682472' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5102' | tail: no files remaining
+Sat, 14 Jul 2018 19:40:07 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568407479682472' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5102' | DISCONNECT
+Sat, 14 Jul 2018 19:40:30 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568430944282252' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sat, 14 Jul 2018 19:40:30 +0800 | ERROR  | stderr     | url:'http://localhost:8080/' id:'1531568430944282252' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5112' | tail: cannot open '/opt/log.txt' for reading: No such file or directory
+Sat, 14 Jul 2018 19:40:30 +0800 | ERROR  | stderr     | url:'http://localhost:8080/' id:'1531568430944282252' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5112' | tail: no files remaining
+Sat, 14 Jul 2018 19:40:30 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568430944282252' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5112' | DISCONNECT
+Sat, 14 Jul 2018 19:41:36 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568496922270919' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sat, 14 Jul 2018 19:41:45 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568496922270919' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5137' | DISCONNECT
+Sat, 14 Jul 2018 19:41:45 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531568496922270919' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5137' | Unexpected error while reading STDOUT from process: read |0: file already closed
+Sat, 14 Jul 2018 19:41:45 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531568496922270919' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5137' | Unexpected error while reading STDERR from process: read |0: file already closed
+Sat, 14 Jul 2018 19:41:46 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568506072012439' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sat, 14 Jul 2018 19:42:33 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568506072012439' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5140' | DISCONNECT
+Sat, 14 Jul 2018 19:42:33 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531568506072012439' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5140' | Unexpected error while reading STDOUT from process: read |0: file already closed
+Sat, 14 Jul 2018 19:42:33 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531568506072012439' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5140' | Unexpected error while reading STDERR from process: read |0: file already closed
+Sat, 14 Jul 2018 19:42:33 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568553444798661' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sat, 14 Jul 2018 19:42:34 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568553444798661' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5145' | DISCONNECT
+Sat, 14 Jul 2018 19:42:34 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531568553444798661' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5145' | Unexpected error while reading STDOUT from process: read |0: file already closed
+Sat, 14 Jul 2018 19:42:34 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531568553444798661' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'5145' | Unexpected error while reading STDERR from process: read |0: file already closed
+Sat, 14 Jul 2018 19:42:34 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531568554693110682' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+nohup: 忽略输入
+Sun, 15 Jul 2018 08:49:53 +0800 | INFO   | server     |  | Serving using application   : ./count.sh 
+Sun, 15 Jul 2018 08:49:53 +0800 | INFO   | server     |  | Serving static content from : .
+Sun, 15 Jul 2018 08:49:53 +0800 | INFO   | server     |  | Starting WebSocket server   : ws://ThinkPad:8080/
+Sun, 15 Jul 2018 08:49:53 +0800 | INFO   | server     |  | Serving CGI or static files : http://ThinkPad:8080/
+Sun, 15 Jul 2018 08:50:34 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531615834253705458' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sun, 15 Jul 2018 08:50:44 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531615834253705458' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'2513' | DISCONNECT
+Sun, 15 Jul 2018 08:51:04 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531615864889864755' remote:'127.0.0.1' command:'./count.sh' origin:'file://' | CONNECT
+Sun, 15 Jul 2018 08:51:14 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531615864889864755' remote:'127.0.0.1' command:'./count.sh' origin:'file://' pid:'2594' | DISCONNECT
+Sun, 15 Jul 2018 08:55:09 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531616109469595970' remote:'127.0.0.1' command:'./count.sh' origin:'file://' | CONNECT
+Sun, 15 Jul 2018 08:55:19 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531616109469595970' remote:'127.0.0.1' command:'./count.sh' origin:'file://' pid:'2779' | DISCONNECT
+Sun, 15 Jul 2018 09:24:57 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531617897844490920' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sun, 15 Jul 2018 09:25:06 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531617897844490920' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'3692' | DISCONNECT
+Sun, 15 Jul 2018 09:25:06 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531617897844490920' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'3692' | Unexpected error while reading STDOUT from process: read |0: file already closed
+Sun, 15 Jul 2018 09:25:06 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531617897844490920' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'3692' | Unexpected error while reading STDERR from process: read |0: file already closed
+Sun, 15 Jul 2018 09:27:04 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531618024631589496' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' | CONNECT
+Sun, 15 Jul 2018 09:27:12 +0800 | ACCESS | session    | url:'http://localhost:8080/' id:'1531618024631589496' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'3851' | DISCONNECT
+Sun, 15 Jul 2018 09:27:12 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531618024631589496' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'3851' | Unexpected error while reading STDOUT from process: read |0: file already closed
+Sun, 15 Jul 2018 09:27:12 +0800 | ERROR  | process    | url:'http://localhost:8080/' id:'1531618024631589496' remote:'127.0.0.1' command:'./count.sh' origin:'http://localhost' pid:'3851' | Unexpected error while reading STDERR from process: read |0: file already closed

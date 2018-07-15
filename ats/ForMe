@@ -39,6 +39,11 @@ nginx的默认用户和用户组是www-data（在nginx.conf中配置
 #websocketd
 1) nohup websocketd --port=8080 --staticdir=. ./count.sh >> log.txt 2>&1 & 后台运行
 2)查看运行的后台进程 jobs -l
+3)后台返回的数据需要以回车返回。但是到前台后不要截位
+4)websocketd --port=8080 php checkPortStatus.php
+
+#json_encode
+1) return String;
 
 #toDo
 1: 需要重新查看查询表的sql。因为要排序 (可能需要优化)

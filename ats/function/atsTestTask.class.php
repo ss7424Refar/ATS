@@ -37,6 +37,7 @@ class atsTestTask{
 
         }
         echo json_encode($jsonResult);
+        fclose($file);
     }
 
     function readMachine4Select2(){
@@ -186,12 +187,13 @@ class atsTestTask{
                     $str = $key. '='. $value.PHP_EOL;
                     file_put_contents($fileCreate, $str,FILE_APPEND);
                     // unix
-                    chmod($fileCreate, 0777);
+//                    chmod($fileCreate, 0777); // no effect
                 }
                 fclose($file);
 
                 if(!copy($fileCreate, ATS_TASKS_PATH. $fileName) || !unlink($fileCreate)){
-                    echo json_encode($multiTask[$i]['TaskID']. " copy or delete fail");
+                    echo json_encode($multiTask[$i]['TaskID']. " copy or delete fail".
+                        copy($fileCreate, ATS_TASKS_PATH. $fileName). '_'. unlink($fileCreate));
                     exit();
                 } else {
                     // update
