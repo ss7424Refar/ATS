@@ -42,6 +42,10 @@ nginx的默认用户和用户组是www-data（在nginx.conf中配置
 3)后台返回的数据需要以回车返回。但是到前台后不要截位
 4)websocketd --port=8080 php checkPortStatus.php
 
+#use pdf.js
+1) viewer.js中DEFAULT_URL置空, 访问2中url
+2) http://localhost/ats/third_party/pdfjs-1.9.426-dist/web/viewer.html?file=test.pdf
+
 #json_encode
 1) return String;
 
