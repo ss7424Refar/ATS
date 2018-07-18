@@ -37,10 +37,11 @@ nginx的默认用户和用户组是www-data（在nginx.conf中配置
 1)生成到task目录下的权限文件只是只读的，对于window来说可以比较难读取。
 
 #websocketd
-1) nohup websocketd --port=8080 --staticdir=. ./count.sh >> log.txt 2>&1 & 后台运行
+1) nohup websocketd --port=8080 --staticdir=. ./count.sh >> logDetect_$(date +\%Y\%m\%d).txt 2>&1 & 后台运行
 2)查看运行的后台进程 jobs -l
 3)后台返回的数据需要以回车返回。但是到前台后不要截位
-4)websocketd --port=8080 php checkPortStatus.php
+4)websocketd --port=8080 php /home/refar/PhpstormProjects/ats/script/checkPortStatus.php >>
+    /home/refar/PhpstormProjects/ats/script/log/logDetect_$(date +\%Y\%m\%d).txt 2>&1 &
 
 #use pdf.js
 1) viewer.js中DEFAULT_URL置空, 访问2中url
@@ -48,6 +49,13 @@ nginx的默认用户和用户组是www-data（在nginx.conf中配置
 
 #json_encode
 1) return String;
+
+#crontab 每10分钟执行一次
+1) 0,10,20,30,40,50 php /home/refar/PhpstormProjects/ats/script/updateTask.php >>
+    /home/refar/PhpstormProjects/ats/script/log/logForUpdateTask_$(date +\%Y\%m\%d).txt
+#1) 0,10,20,30,40,50 php /home/refar/PhpstormProjects/ats/script/updateTask.php >> logForUpdateTask_$(date +\%Y\%m\%d_\%H\%M\%S).txt
+
+2) */10 * * * * /home/aspera/my_script.sh
 
 #toDo
 1: 需要重新查看查询表的sql。因为要排序 (可能需要优化)

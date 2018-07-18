@@ -20,9 +20,10 @@ $sql4UpdateTask = "UPDATE `ats_testtask_info` SET `TestResult`=?, `TestResultPat
 
 $stmt = $pdoc->prepare($sql4GetSystem);
 $stmt->execute(array('FinishTimeStamp'));
-
-$isUpdated = false;
-
+// update flag for system_db
+$needUpdated = false;
+// 10 sec
+sleep(10);
 if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
     $saveTimeStamp = $row['value'];
@@ -65,11 +66,8 @@ if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                     $stmt->execute();
 
                     if ($stmt->rowCount() > 0) {
-                        if (!$isUpdated) {
-                            $isUpdated = true;
-                            $stmt = $pdoc->prepare($sql4UpdateSystem);
-                            $stmt->execute(array('FinishTimeStamp'));
-                            echo date("Y-m-d H:i:s", time()) . ' : ' . '[updated] atsSystemConfig' . PHP_EOL;
+                        if (!$needUpdated) {
+                            $needUpdated = true;
                         }
                     }
                     echo date("Y-m-d H:i:s", time()) . ' : ' . $filename . ' [updated] taskDB result --> ' . $stmt->rowCount() . PHP_EOL;
@@ -79,6 +77,11 @@ if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
         }
 
+    }
+    if ($needUpdated) {
+        $stmt = $pdoc->prepare($sql4UpdateSystem);
+        $stmt->execute(array('FinishTimeStamp'));
+        echo date("Y-m-d H:i:s", time()) . ' : ' . '[updated] atsSystemConfig' . PHP_EOL;
     }
 
 } else {
