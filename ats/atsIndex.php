@@ -1002,7 +1002,7 @@ $_SESSION['user']='daring';
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.php"><i class="fas fa-cog fa-spin" style="color: blueviolet"></i>
+            <a class="navbar-brand" href="atsIndex.php"><i class="fas fa-cog fa-spin" style="color: blueviolet"></i>
                 Automation&nbsp;Test&nbsp;Platform
             </a>
         </div>
@@ -1297,12 +1297,17 @@ $_SESSION['user']='daring';
                         <h4 class="modal-title" id="myModalLabel">Edit Test Task</h4>
                     </div>
                     <div class="modal-body">
-                        <form class="form-horizontal form-group-sm">
+                        <form class="form-horizontal form-group-sm" id="editForm">
+                            <div class="form-group" style="display: none">
+                                <label for="TestMachine" class="col-sm-3 control-label"></label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
                                 <div class="col-sm-7">
-                                    <select class="form-control" name="state2">
-                                    </select>
+                                    <input type="text" class="form-control" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -1319,6 +1324,12 @@ $_SESSION['user']='daring';
                                 <div class="col-sm-7">
                                     <select class="form-control" name="testImage">
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
