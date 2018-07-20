@@ -18,20 +18,20 @@ define('PMDB_NAME', 'pm'); // pm db name
 
 // ats image path
 //define('ATS_IMAGES_PATH', 'D:\download');
-define('ATS_IMAGES_PATH', '/home/refar');
+define('ATS_IMAGES_PATH', '/mnt/atsShare/Image');
 
 // ats task path
 define('ATS_FILE_UNDERLINE', '_');
 define('ATS_FILE_suffix', '.csv');
 //define('ATS_PREPARE_PATH', 'D:/wnmp/www/ATS/ats/resource/prepare/');
-define('ATS_PREPARE_PATH', '/home/refar/PhpstormProjects/ats/resource/prepare/');
+define('ATS_PREPARE_PATH', '/mnt/atsShare/TestPCs/');
 define('ATS_PREPARE_FILE', 'TestPC');
 
 //define('ATS_TMP_TASKS_PATH', 'D:/wnmp/www/ATS/ats/resource/tmp/');
-define('ATS_TMP_TASKS_PATH', '/home/refar/PhpstormProjects/ats/resource/tmp/');
+define('ATS_TMP_TASKS_PATH', '/home/refar/Phpproject/ATS/ats/resource/tmp/');
 define('ATS_TMP_TASKS_HEADER', 'Task'. ATS_FILE_UNDERLINE);
 //define('ATS_TASKS_PATH', 'D:/wnmp/www/ATS/ats/resource/tasks/');
-define('ATS_TASKS_PATH', '/home/refar/PhpstormProjects/ats/resource/tasks/');
+define('ATS_TASKS_PATH', '/mnt/atsShare/Tasks/');
 //define('ATS_FINISH_PATH', 'D:/wnmp/www/ATS/ats/resource/finish/');
-define('ATS_FINISH_PATH', '/home/refar/PhpstormProjects/ats/resource/finish/');
+define('ATS_FINISH_PATH', '/mnt/atsShare/Finished/');
 

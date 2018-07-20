@@ -55,6 +55,9 @@ $_SESSION['user']='daring';
     <link href="third_party/bootstrapvalidator/dist/css/bootstrapValidator.min.css" rel="stylesheet">
     <script src="third_party/bootstrapvalidator/dist/js/bootstrapValidator.min.js"></script>
 
+    <!-- bootbox4.4 -->
+    <script src="third_party/bootbox4.4/bootbox.min.js"></script>
+
     <style type="text/css">
         body { padding-top: 70px; }
 
@@ -158,6 +161,9 @@ $_SESSION['user']='daring';
 
             //task button
             assignButtonInit();
+
+            deleteTaskButtonInit();
+
         });
         <!-- Tooltip-->
         function toolTipInit(){
@@ -875,7 +881,7 @@ $_SESSION['user']='daring';
                                 type: "get",
                                 url: "function/atsController.php?do=assignAtsInfoByMultiTaskId",
                                 data: {multiTask: ckArr},
-                                dataType: 'json',
+                                // dataType: 'json',
                                 success: function (result) {
                                     if("done" === result){
                                         toastr.success("success assign to ATS");
@@ -899,6 +905,85 @@ $_SESSION['user']='daring';
 
             });
         }
+
+        function deleteTaskButtonInit() {
+            $('#deleteTask').click(function () {
+                var ckArr = $('#taskTable').bootstrapTable('getSelections');
+                console.log(ckArr);
+
+                if(ckArr.length == 0){
+                    toastr.info("Please select at least one checkbox");
+                    return;
+
+                }
+                if(ckArr.length >= 1 && ckArr.length<= 5){
+
+                    bootbox.confirm({
+                        message: " Do you want delete ?",
+                        buttons: {
+                            confirm: {
+                                label: 'Yes',
+                                className: 'btn-success'
+                            },
+                            cancel: {
+                                label: 'No',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if(result){
+                                $.ajax({
+                                    type: "get",
+                                    url: "function/atsController.php?do=checkAtsInfoByMultiTaskId",
+                                    data: {multiTask: ckArr},
+                                    dataType: 'json',
+                                    success: function (result2) {
+                                        console.log(result2.NoTaskIdFlag);
+                                        console.log(result2.NotPendingFlag);
+
+                                        if (result2.NoTaskIdFlag){
+                                            toastr.info("TaskID = " + result2.saveNoTaskId + " didn't found! Please Refresh Table!");
+                                            return;
+                                        }
+                                        if (result2.NotPendingFlag) {
+                                            toastr.info("TaskID = " + result2.saveNotPending + " not pending! cannnot delete");
+                                            return;
+                                        }
+
+                                        // delete
+                                        $.ajax({
+                                            type: "get",
+                                            url: "function/atsController.php?do=deleteAtsInfoByMultiTaskId",
+                                            data: {multiTask: ckArr},
+                                            // dataType: 'json',
+                                            success: function (result2) {
+                                                if("done" == result2){
+                                                    toastr.success("success deleted");
+                                                    $('#taskTable').bootstrapTable('selectPage', 1);
+                                                } else {
+                                                    toastr.error(result2);
+                                                }
+                                            },
+                                            error: function () {
+                                                toastr.error("fail deleted");
+                                            }
+                                        });
+                                    },
+                                    error: function (xhr,status,error) {
+                                        toastr.error(xhr.status + " " + xhr.statusText);
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+
+                } else {
+                    toastr.warning("Please select not more than five checkbox");
+                }
+
+                });
+            };
 
 
     </script>
@@ -1051,7 +1136,7 @@ $_SESSION['user']='daring';
                     <button type="button" class="btn btn-success btn-sm" id="addTask" data-toggle="modal" data-target="#addModal"><i class="fa fa-plus fa-fw"></i>&nbsp;Add</button>
                     <button type="button" class="btn btn-warning btn-sm" id="assignTask"><i class="fa fa-wrench fa-fw"></i>&nbsp;Assign</button>
                     <button type="button" class="btn btn-info btn-sm" id="editTask" data-toggle="modal" data-target="#editModal"><i class="fa fa-pencil-alt fa-fw"></i>&nbsp;Edit</button>
-                    <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-trash-alt  fa-fw"></i>&nbsp;Delete</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="deleteTask"><i class="fa fa-trash-alt  fa-fw"></i>&nbsp;Delete</button>
                     <button type="button" class="btn btn-default btn-sm"><i class="fa fa-copy  fa-fw"></i>&nbsp;Copy</button>
                 </div>
 <!--                <button class="btn btn-warning pull-right btn-sm" href="#"><i class="fa fa-sync fa-spin fa-fw" aria-hidden="true"></i></button>-->

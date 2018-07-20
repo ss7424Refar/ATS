@@ -186,10 +186,11 @@ class atsTestTask{
                     }
                     $str = $key. '='. $value.PHP_EOL;
                     file_put_contents($fileCreate, $str,FILE_APPEND);
-                    // unix
-//                    chmod($fileCreate, 0777); // no effect
+
                 }
                 fclose($file);
+                // unix
+                chmod($fileCreate, 0777); // no effect
 
                 if(!copy($fileCreate, ATS_TASKS_PATH. $fileName) || !unlink($fileCreate)){
                     echo json_encode($multiTask[$i]['TaskID']. " copy or delete fail".
@@ -229,4 +230,22 @@ class atsTestTask{
             echo "error". "<br>". $sql;
         }
     }
+
+    function deleteAtsInfoByMultiTaskId($multiTask=null){
+        $sql = "delete from  $this->atsTaskInfoTable where TaskID = ?";
+        $pdoc = getPDOConnect();
+
+        $stmt = $pdoc->prepare($sql);
+        for ($i = 0; $i < count($multiTask); $i++) {
+            $stmt->execute(array($multiTask[$i]['TaskID']));
+
+            if (! $stmt->rowCount() > 0){
+                echo "error". "<br> when delete ". $multiTask[$i]['TaskID'];
+                exit();
+            }
+        }
+        echo "done";
+
+    }
+
 }

@@ -36,6 +36,10 @@ if(!empty($action)){
             $multiTask=isset($_GET['multiTask']) ? $_GET['multiTask'] : 0;
             $atsTask->assignAtsInfoByMultiTaskId($multiTask);
             break;
+        case 'deleteAtsInfoByMultiTaskId':
+            $multiTask=isset($_GET['multiTask']) ? $_GET['multiTask'] : 0;
+            $atsTask->deleteAtsInfoByMultiTaskId($multiTask);
+            break;
         case 'addTask':
             $atsTask->insertAtsTaskInfo(process4InitAddTaskForm());
             break;

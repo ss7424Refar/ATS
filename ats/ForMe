@@ -22,6 +22,10 @@ mysql是非持继连接函数而mysqli是永远连接函数
 // Finish /Prepare等文件
 ###需要挂载window的共享文件夹到linux下
 # mount -t cifs -o username='812647742@qq.com' //192.168.0.106/download /mnt
+# maybeRight
+sudo mount -t  cifs //192.168.0.99/Automation /mnt/atsShare/ -o username="Administrator",gid=33,uid=33
+1) 33代表www-data
+
 // ubuntu17.04/centos则需要重新安装 1) yum search cifs-utils 2) yum install cifs-utils -y
 #读取某一路径下的文件名称
 
@@ -42,6 +46,7 @@ nginx的默认用户和用户组是www-data（在nginx.conf中配置
 3)后台返回的数据需要以回车返回。但是到前台后不要截位
 4)websocketd --port=8080 php /home/refar/PhpstormProjects/ats/script/checkPortStatus.php >>
     /home/refar/PhpstormProjects/ats/script/log/logDetect_$(date +\%Y\%m\%d).txt 2>&1 &
+## 貌似还要进入目录执行php文件来的靠谱。。
 
 #use pdf.js
 1) viewer.js中DEFAULT_URL置空, 访问2中url
