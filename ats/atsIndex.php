@@ -146,7 +146,7 @@ $_SESSION['user']='daring';
 
             // init addModal
             $('#addModal').on('show.bs.modal', function () {
-                alert(6);
+                // alert(6);
                 addDefaultCK.prop('checked', 'true');
                 addMachine.val(null).trigger('change');
                 addTestImage.val(null).trigger('change');
@@ -345,7 +345,7 @@ $_SESSION['user']='daring';
 
                 }
             }).on("select2:clear", function (e) {
-                alert(4);
+                // alert(4);
                 if (addDefaultCK.prop('checked')){
                     pDmiInfo.css('display', 'none').find('p').html('');
                 } else {
@@ -367,7 +367,7 @@ $_SESSION['user']='daring';
                 var machineId = addMachine.val();
 
                 if ("customer" === vadio) {
-                    alert(1);
+                    // alert(1);
                     pDmiInfo.css('display', 'none');
                     inputDmiInfo.css('display', 'block');
 
@@ -375,7 +375,7 @@ $_SESSION['user']='daring';
                     inputDmiInfo.find('input').val('');
                     inputDmiInfo.find('p').html('N/A');
                 } else if("default" === vadio) {
-                    alert(2);
+                    // alert(2);
                     addMachine.val(null).trigger('change');
                     inputDmiInfo.css('display', 'none');
                     pDmiInfo.css('display', 'none');
@@ -1299,19 +1299,19 @@ $_SESSION['user']='daring';
                     <div class="modal-body">
                         <form class="form-horizontal form-group-sm" id="editForm">
                             <div class="form-group" style="display: none">
-                                <label for="TestMachine" class="col-sm-3 control-label"></label>
+                                <label class="col-sm-3 control-label"></label>
                                 <div class="col-sm-7">
                                     <input type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
+                                <label class="col-sm-3 control-label">Test Machine</label>
                                 <div class="col-sm-7">
                                     <input type="text" class="form-control" disabled="disabled">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="TestItem" class="col-sm-3 control-label">Test Item</label>
+                                <label class="col-sm-3 control-label">Test Item</label>
                                 <div class="col-sm-7">
                                     <select class="form-control" >
                                         <option value="1">JumpStart</option>
@@ -1320,50 +1320,58 @@ $_SESSION['user']='daring';
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="TestImage" class="col-sm-3 control-label">Test Image</label>
+                                <label class="col-sm-3 control-label">Test Image</label>
                                 <div class="col-sm-7">
                                     <select class="form-control" name="testImage">
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="TestMachine" class="col-sm-3 control-label">Test Machine</label>
-                                <div class="col-sm-7">
-                                    <input type="text" class="form-control" disabled="disabled">
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="TestDMIReset" class="col-sm-3 control-label">TestDMIReset</label>
                                 <div class="col-sm-7">
-                                    <div class="checkbox">
-                                        <label class="text-danger">
-                                            <input type="checkbox"> Use JQ
-                                        </label>
-                                    </div>
+                                    <div class="btn btn-default btn-sm">getDMI</div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="SerialNumber" class="col-sm-3 control-label">Serial Number</label>
+                                <label  class="col-sm-3 control-label">Product Name</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="SerialNumber" disabled>
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="PartNumber" class="col-sm-3 control-label">Part Number</label>
+                                <label class="col-sm-3 control-label">Serial Number</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="PartNumber" disabled>
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="oemString" class="col-sm-3 control-label">OEM String</label>
+                                <label class="col-sm-3 control-label">Part Number</label>
                                 <div class="col-sm-7">
-                                    <input type="text" class="form-control" id="oemString"  disabled>
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="SwitchID" class="col-sm-3 control-label">SwitchID</label>
-                                <div class="col-sm-2">
-                                    <input type="text" class="form-control" id="SwitchID">
+                                <label class="col-sm-3 control-label">OEM String</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">SystemConfig</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">LANIP</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">ShelfID_SwitchID</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" disabled>
                                 </div>
                             </div>
                         </form>

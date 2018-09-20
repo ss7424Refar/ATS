@@ -7,7 +7,7 @@
  */
 
 //require_once '../ats_config.inc.php';
-require_once '../function/dbConnect.php';
+require_once '../function/atsDbConnect.php';
 
 $pdoc = getPDOConnect();
 //$filePath = __DIR__. '\writeTo.csv';
@@ -17,22 +17,9 @@ $pdoc = getPDOConnect();
 $sql="select * from ats_testtask_info where TaskID=?";
 $stmt = $pdoc->prepare($sql);
 
-    if($stmt->execute(array(8712128))){
+    if($stmt->execute(array(123))){
         if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-//            print_r($row);
-//            echo count($row);
 
-            // output to csv
-//            fputcsv($file, $row, ',', '"');
-
-//            foreach ($row as $key=>$value){
-//                if(!isset($value)){
-//                    $value='NULL';
-//                }
-//                $str = $key. '='. $value.PHP_EOL;
-//                echo $str;
-//                file_put_contents('writeTo.csv',$str,FILE_APPEND);
-//            }
 //
         } else{
             echo "111";
@@ -45,7 +32,7 @@ $stmt = $pdoc->prepare($sql);
 $sql4SelectTask="select * from ats_schedule_info where TaskID=?";
 $stmt = $pdoc->prepare($sql4SelectTask);
 $multiTask = array(array('TaskID' => 8712119));
-print_r(count($multiTask));
+//print_r(count($multiTask));
 for ($i = 0; $i < count($multiTask); $i++) {
     if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         foreach ($row as $key=>$value){
